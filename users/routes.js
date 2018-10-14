@@ -1,4 +1,4 @@
-async function userRoutes (fastify, opts, next) {
+function userRoutes (fastify, opts, next) {
   fastify.post('/users',
     {
       schema: {
@@ -6,8 +6,9 @@ async function userRoutes (fastify, opts, next) {
           type: 'object',
           properties: {
             displayName: { type: 'string' }
-          },
-          required: ['displayName'] // FIXME: required keys arent validated by fastify
+          }
+          // FIXME: required keys arent validated by fastify
+          // required: ['displayName']
         },
         response: {
           201: {
@@ -28,10 +29,14 @@ async function userRoutes (fastify, opts, next) {
         return new Error('Required parameter missing: displayName')
       }
 
-      const newUser = await fastify.User.query()
-        .insert({ displayName })
-      reply.code(fastify.status.CREATED)
-      return newUser
+      try {
+        const newUser = await fastify.User.query()
+          .insert({ displayName })
+        reply.code(fastify.status.CREATED)
+        return newUser
+      } catch (err) {
+        throw err
+      }
     }
   )
 
@@ -53,12 +58,19 @@ async function userRoutes (fastify, opts, next) {
       }
     },
     async function getUser (request, reply) {
-      const userId = request.params.userId
-      const user = await fastify.User.query()
-        .findOne('id', userId)
-      return user
+      const { userId } = request.params
+
+      try {
+        const user = await fastify.User.query()
+          .findOne('id', userId)
+        return user
+      } catch (err) {
+        throw err
+      }
     }
   )
+
+  next()
 }
 
 module.exports = userRoutes

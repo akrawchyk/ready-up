@@ -1,28 +1,29 @@
 const fp = require('fastify-plugin')
 
-const TABLE_NAME = 'users'
+const TABLE_NAME = 'lobbies'
 
-async function createUsersSchema(knex) {
+async function createLobbiesSchema(knex) {
   const hasTable = await knex.schema.hasTable(TABLE_NAME)
 
   if (!hasTable) {
     return knex.schema.createTable(TABLE_NAME, table => {
       table.increments('id').primary()
       table.string('displayName')
-      table.unique('displayName')
+      table.integer('createdByUserId')
+      table.foreign('createdByUserId').references('users.id')
       table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6))
       table.timestamp('updatedAt', 6)
     })
   }
 }
 
-function createUserModel(Model) {
-  return class User extends Model {
+function createLobbyModel(Model) {
+  return class Lobby extends Model {
     static get tableName() {
       return TABLE_NAME
     }
 
-    static get relationMappings() {
+    static get relationalMappings() {
       return {
 
       }
@@ -30,15 +31,14 @@ function createUserModel(Model) {
   }
 }
 
-
-async function userModel (fastify, opts, next) {
+async function lobbyModel (fastify, opts, next) {
   try {
-    await createUsersSchema(fastify.knex)
-    fastify.decorate('User', createUserModel(fastify.Model))
+    await createLobbiesSchema(fastify.knex)
+    fastify.decorate('Lobby', createLobbyModel(fastify.Model))
     next()
   } catch (err) {
     next(err)
   }
 }
 
-module.exports = fp(userModel, '>=0.30.0')
+module.exports = fp(lobbyModel)
