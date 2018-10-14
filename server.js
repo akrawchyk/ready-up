@@ -1,6 +1,7 @@
 const fastify = require('fastify')({
   logger: true
 })
+const fastifyHttpStatus = require('./plugins/fastify-http-status')
 const fastifyObjection = require('./plugins/fastify-objection')
 const argv = require('yargs')
   .env('READY_UP')
@@ -16,6 +17,7 @@ const argv = require('yargs')
 
 const { httpPort, pgConnectionString } = argv
 
+fastify.register(fastifyHttpStatus)
 fastify.register(fastifyObjection, { pgConnectionString })
   .after(err => {
     if (err) throw err
