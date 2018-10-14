@@ -20,8 +20,7 @@ fastify.register(fastifyObjection, { pgConnectionString })
   .after(err => {
     if (err) throw err
   })
-  .register(require('./users/user'))
-  .register(require('./users/routes'))
+fastify.register(require('./users'))
 
 const listen = async () => {
   try {

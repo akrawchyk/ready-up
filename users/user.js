@@ -20,7 +20,7 @@ async function createUsersSchema(knex) {
   }
 }
 
-async function model (fastify, opts, next) {
+async function userModel (fastify, opts, next) {
   try {
     await createUsersSchema(fastify.knex)
     fastify.decorate('User', User)
@@ -30,4 +30,4 @@ async function model (fastify, opts, next) {
   }
 }
 
-module.exports = fp(model, '>=0.30.0')
+module.exports = fp(userModel, '>=0.30.0')
