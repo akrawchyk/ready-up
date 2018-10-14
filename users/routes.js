@@ -29,14 +29,11 @@ function userRoutes (fastify, opts, next) {
         return new Error('Required parameter missing: displayName')
       }
 
-      try {
-        const newUser = await fastify.User.query()
-          .insert({ displayName })
-        reply.code(fastify.status.CREATED)
-        return newUser
-      } catch (err) {
-        throw err
-      }
+      const newUser = await fastify.User.query()
+        .insert({ displayName })
+      reply.code(fastify.status.CREATED)
+
+      return newUser
     }
   )
 
@@ -60,13 +57,15 @@ function userRoutes (fastify, opts, next) {
     async function getUser (request, reply) {
       const { userId } = request.params
 
-      try {
-        const user = await fastify.User.query()
-          .findOne('id', userId)
-        return user
-      } catch (err) {
-        throw err
+      const user = await fastify.User.query()
+        .findById(userId)
+
+      if (!user) {
+        reply.code(fastify.status.NOT_FOUND)
+        return new fastify.Model.NotFoundError()
       }
+
+      return user
     }
   )
 

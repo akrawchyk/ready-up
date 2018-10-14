@@ -67,7 +67,7 @@ function lobbyRoutes (fastify, opts, next) {
 
       try {
         const lobby = await fastify.Lobby.query()
-          .findOne('id', lobbyId)
+          .findById(lobbyId)
         return lobby
       } catch (err) {
         throw err

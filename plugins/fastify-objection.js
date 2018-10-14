@@ -1,8 +1,13 @@
 const fp = require('fastify-plugin')
+const status = require('http-status')
 const Knex = require('knex')
-const { Model } = require('objection')
-const { UniqueViolationError } = require('objection-db-errors')
-
+const { Model, ValidationError, NotFoundError } = require('objection')
+const {
+  DbErrors,
+  DBError,
+  UniqueViolationError,
+  ForeignKeyViolationError
+} = require('objection-db-errors')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -19,7 +24,7 @@ function fastifyObjection (fastify, opts, next) {
 
     Model.knex(knex)
 
-    class BaseModel extends Model {
+    class BaseModel extends DbErrors(Model) {
       $beforeInsert() {
         this.createdAt = knex.fn.now(6)
       }
@@ -41,9 +46,18 @@ function fastifyObjection (fastify, opts, next) {
       }
     })
 
-    fastify.setErrorHandler(function (error, request, reply) {
-      console.log(error.message)
+    fastify.setErrorHandler(async function (err, request, reply) {
+      if (err instanceof ValidationError) {
+        reply.code(status.UNPROCESSABLE_ENTITY)
+      } else if (err instanceof NotFoundError) {
+        reply.code(status.NOT_FOUND)
+      } else if (err instanceof UniqueViolationError) {
+        reply.code(status.CONFLICT)
+      } else if (err instanceof ForeignKeyViolationError) {
+        reply.code(status.CONFLICT)
+      }
 
+      return new Error(err.type)
     })
 
     next()

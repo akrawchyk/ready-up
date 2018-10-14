@@ -34,18 +34,11 @@ function lobbyMemberRoutes (fastify, opts, next) {
         return error
       }
 
-      try {
-        const newLobbyMember = await fastify.LobbyMember.query()
-          .insert({ lobbyId, userId })
-        return newLobbyMember
-      } catch(err) {
-        if (err instanceof ValidationError) {
-          reply.code(fastify.status.UNPROCESSABLE_ENTITY)
-          return new Error(err.message)
-        }
+      const newLobbyMember = await fastify.LobbyMember.query()
+        .insert({ lobbyId, userId })
+      reply.code(fastify.status.CREATED)
 
-        throw err
-      }
+      return newLobbyMember
     }
   )
 
@@ -71,13 +64,15 @@ function lobbyMemberRoutes (fastify, opts, next) {
     async function getLobbyMember (request, reply) {
       const { lobbyMemberId } = request.params
 
-      try {
-        const lobbyMember = await fastify.LobbyMember.query()
-          .findOne('id', lobbyMemberId)
-        return lobbyMember
-      } catch (err) {
-        throw err
+      const lobbyMember = await fastify.LobbyMember.query()
+        .findById(lobbyMemberId)
+
+      if (!lobbyMember) {
+        reply.code(fastify.status.NOT_FOUND)
+        return new fastify.Model.NotFoundError()
       }
+
+      return lobbyMember
     }
   )
 
