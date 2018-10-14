@@ -1,4 +1,4 @@
-async function userRoutes (fastify, options) {
+async function userRoutes (fastify, opts, next) {
   fastify.post('/users',
     {
       schema: {
@@ -19,9 +19,10 @@ async function userRoutes (fastify, options) {
       }
     },
     async function createUser (request, reply) {
-      const displayName = request.body.displayName
-      // create user with displayName, return id
-      return { id: 4 }
+      const { displayName } = request.body
+      const newUser = await fastify.User.query()
+        .insert({ displayName })
+      return { id: newUser.id }
     }
   )
 
@@ -32,6 +33,7 @@ async function userRoutes (fastify, options) {
           200: {
             type: 'object',
             properties: {
+              id: { type: 'number' },
               displayName: { type: 'string' }
             }
           }
@@ -40,7 +42,9 @@ async function userRoutes (fastify, options) {
     },
     async function getUser (request, reply) {
       const userId = request.params.userId
-      return { displayName: userId }
+      const user = await fastify.User.query()
+        .findOne('id', userId)
+      return user
     }
   )
 }
