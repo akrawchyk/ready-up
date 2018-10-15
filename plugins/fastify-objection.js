@@ -24,6 +24,7 @@ function fastifyObjection (fastify, opts, next) {
     Model.knex(knex)
 
     fastify.decorate('knex', knex)
+    fastify.decorate('Model', Model)
     fastify.addHook('onClose', async (instance, done) => {
       try {
         await knex.destroy()

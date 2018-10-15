@@ -77,6 +77,12 @@ function lobbyRoutes (fastify, opts, next) {
         const lobby = await fastify.Lobby.query()
           .eager('lobbyMembers')
           .findById(lobbyId)
+
+        if (!lobby) {
+          reply.code(fastify.status.NOT_FOUND)
+          return new fastify.Model.NotFoundError()
+        }
+
         return lobby
       } catch (err) {
         throw err

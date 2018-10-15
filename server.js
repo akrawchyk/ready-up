@@ -3,19 +3,7 @@ const fastify = require('fastify')({
 })
 const fastifyHttpStatus = require('./plugins/fastify-http-status')
 const fastifyObjection = require('./plugins/fastify-objection')
-const argv = require('yargs')
-  .env('READY_UP')
-  .option('HTTP_PORT', {
-    alias: 'httpPort',
-    default: 3000
-  })
-  .option('PG_CONNECTION_STRING', {
-    alias: 'pgConnectionString',
-    default: 'postgresql://postgres@localhost/ready-up'
-  })
-  .argv
-
-const { httpPort, pgConnectionString } = argv
+const { httpPort, pgConnectionString } = require('./options')
 
 fastify.register(fastifyHttpStatus)
 fastify.register(fastifyObjection, { pgConnectionString })
