@@ -3,7 +3,6 @@ const status = require('http-status')
 const Knex = require('knex')
 const { Model, ValidationError, NotFoundError } = require('objection')
 const {
-  DbErrors,
   DBError,
   UniqueViolationError,
   ForeignKeyViolationError
@@ -24,18 +23,7 @@ function fastifyObjection (fastify, opts, next) {
 
     Model.knex(knex)
 
-    class BaseModel extends DbErrors(Model) {
-      $beforeInsert() {
-        this.createdAt = knex.fn.now(6)
-      }
-
-      $beforeUpdate() {
-        this.updatedAt = knex.fn.now(6)
-      }
-    }
-
     fastify.decorate('knex', knex)
-    fastify.decorate('Model', BaseModel)
     fastify.addHook('onClose', async (instance, done) => {
       try {
         await knex.destroy()

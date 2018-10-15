@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin')
-
+const Lobby = require('./model')
 const TABLE_NAME = 'lobbies'
 
 async function createLobbiesSchema(knex) {
@@ -17,24 +17,10 @@ async function createLobbiesSchema(knex) {
   }
 }
 
-function createLobbyModel(Model) {
-  return class Lobby extends Model {
-    static get tableName() {
-      return TABLE_NAME
-    }
-
-    static get relationalMappings() {
-      return {
-
-      }
-    }
-  }
-}
-
 async function lobbyModel (fastify, opts, next) {
   try {
     await createLobbiesSchema(fastify.knex)
-    fastify.decorate('Lobby', createLobbyModel(fastify.Model))
+    fastify.decorate('Lobby', Lobby)
     next()
   } catch (err) {
     next(err)

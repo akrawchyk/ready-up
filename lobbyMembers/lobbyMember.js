@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin')
-
+const LobbyMember = require('./model')
 const TABLE_NAME = 'lobbyMembers'
 
 async function createLobbyMembersSchema(knex) {
@@ -12,6 +12,7 @@ async function createLobbyMembersSchema(knex) {
       table.foreign('lobbyId').references('lobbies.id')
       table.integer('userId')
       table.foreign('userId').references('users.id')
+      table.unique(['lobbyId', 'userId'])
       table.boolean('ready').defaultTo(false)
       table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6))
       table.timestamp('updatedAt', 6)
@@ -19,24 +20,10 @@ async function createLobbyMembersSchema(knex) {
   }
 }
 
-function createLobbyMemberModel(Model) {
-  return class LobbyMember extends Model {
-    static getTableName() {
-      return TABLE_NAME
-    }
-
-    static get relationalMappings() {
-      return {
-
-      }
-    }
-  }
-}
-
 async function lobbyMemberModel (fastify, opts, next) {
   try {
     await createLobbyMembersSchema(fastify.knex)
-    fastify.decorate('LobbyMember', createLobbyMemberModel(fastify.Model))
+    fastify.decorate('LobbyMember', LobbyMember)
     next()
   } catch (err) {
     next(err)

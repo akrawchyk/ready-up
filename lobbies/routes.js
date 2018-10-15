@@ -55,8 +55,16 @@ function lobbyRoutes (fastify, opts, next) {
             type: 'object',
             properties: {
               id: { type: 'number' },
-              displayName: { type: 'string' }
-              // lobbyMembers: { type: 'array' }
+              displayName: { type: 'string' },
+              lobbyMembers: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                  }
+                }
+              }
             }
           }
         }
@@ -67,6 +75,7 @@ function lobbyRoutes (fastify, opts, next) {
 
       try {
         const lobby = await fastify.Lobby.query()
+          .eager('lobbyMembers')
           .findById(lobbyId)
         return lobby
       } catch (err) {

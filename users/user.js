@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin')
-
+const User = require('./model')
 const TABLE_NAME = 'users'
 
 async function createUsersSchema(knex) {
@@ -16,29 +16,14 @@ async function createUsersSchema(knex) {
   }
 }
 
-function createUserModel(Model) {
-  return class User extends Model {
-    static get tableName() {
-      return TABLE_NAME
-    }
-
-    static get relationMappings() {
-      return {
-
-      }
-    }
-  }
-}
-
-
 async function userModel (fastify, opts, next) {
   try {
     await createUsersSchema(fastify.knex)
-    fastify.decorate('User', createUserModel(fastify.Model))
+    fastify.decorate('User', User)
     next()
   } catch (err) {
     next(err)
   }
 }
 
-module.exports = fp(userModel, '>=0.30.0')
+module.exports = fp(userModel)
