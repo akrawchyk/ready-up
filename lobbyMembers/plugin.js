@@ -1,6 +1,6 @@
 const fp = require('fastify-plugin')
-const LobbyMember = require('./model')
-const TABLE_NAME = 'lobbyMembers'
+const LobbyMember = require('../models/LobbyMember')
+const TABLE_NAME = LobbyMember.tableName
 
 async function createLobbyMembersSchema(knex) {
   const hasTable = await knex.schema.hasTable(TABLE_NAME)
@@ -20,7 +20,7 @@ async function createLobbyMembersSchema(knex) {
   }
 }
 
-async function lobbyMemberModel (fastify, opts, next) {
+async function lobbyMemberPlugin (fastify, opts, next) {
   try {
     await createLobbyMembersSchema(fastify.knex)
     fastify.decorate('LobbyMember', LobbyMember)
@@ -30,4 +30,4 @@ async function lobbyMemberModel (fastify, opts, next) {
   }
 }
 
-module.exports = fp(lobbyMemberModel)
+module.exports = fp(lobbyMemberPlugin)

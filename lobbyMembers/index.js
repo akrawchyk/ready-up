@@ -1,5 +1,5 @@
 function lobbyMembersService (fastify, opts, next) {
-  fastify.register(require('./lobbyMember'))
+  fastify.register(require('./plugin'))
   fastify.register(require('./routes'))
   next()
 }

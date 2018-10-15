@@ -1,18 +1,15 @@
-const Model = require('../db/base-model')
+const Model = require('./BaseModel')
 
 class LobbyMember extends Model {
-  static getTableName() {
+  static get tableName() {
     return 'lobbyMembers'
   }
 
   static get relationMappings() {
-    const User = require('../users/model')
-    const Lobby = require('../lobbies/model')
-
     return {
       user: {
         relation: Model.BelongsToOneRelation,
-        modelClass: User,
+        modelClass: `${__dirname}/User`,
         join: {
           from: 'lobbyMembers.userId',
           to: 'users.id'
@@ -20,7 +17,7 @@ class LobbyMember extends Model {
       },
       lobby: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Lobby,
+        modelClass: `${__dirname}/Lobby`,
         join: {
           from: 'lobbyMembers.lobbyId',
           to: 'lobbies.id'

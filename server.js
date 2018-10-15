@@ -25,7 +25,6 @@ fastify.register(fastifyObjection, { pgConnectionString })
 fastify.register(require('./users'))
 fastify.register(require('./lobbies'))
 fastify.register(require('./lobbyMembers'))
-// fastify.register(require('./friends'))
 
 const listen = async () => {
   try {
