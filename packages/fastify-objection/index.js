@@ -11,7 +11,10 @@ const {
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 function fastifyObjection (fastify, opts, next) {
-  const { pgConnectionString } = opts
+  const {
+    pgConnectionString,
+    BaseModelClass
+  } = opts
   let knex
 
   try {
@@ -26,10 +29,15 @@ function fastifyObjection (fastify, opts, next) {
     return
   }
 
-  Model.knex(knex)
+  if (BaseModelClass) {
+    BaseModelClass.knex(knex)
+    fastify.decorate('Model', BaseModelClass)
+  } else {
+    Model.knex(knex)
+    fastify.decorate('Model', Model)
+  }
 
   fastify.decorate('knex', knex)
-  fastify.decorate('Model', Model)
   fastify.addHook('onClose', async (instance, done) => {
     try {
       await knex.destroy()

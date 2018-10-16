@@ -1,13 +1,17 @@
 const fastify = require('fastify')({ logger: true })
 const { httpPort, pgConnectionString } = require('ready-up-options')
+const { BaseModel } = require('ready-up-sdk')
 
-fastify.register(require('fastify-objection'), { pgConnectionString })
+fastify.register(require('fastify-objection'), {
+  pgConnectionString,
+  BaseModelClass: BaseModel
+})
   .after(err => {
     if (err) throw err
   })
+fastify.register(require('fastify-ready-up'))
 fastify.register(require('./plugins/fastify-http-status'))
 fastify.register(require('./plugins/fastify-errors'))
-fastify.register(require('./plugins/fastify-ready-up'))
 
 fastify.register(require('./users'))
 fastify.register(require('./lobbies'))

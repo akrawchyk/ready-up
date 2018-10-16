@@ -7,11 +7,15 @@ class BaseModel extends DbErrors(Model) {
   }
 
   $beforeInsert() {
-    this.createdAt = Model.fn().now(6)
+    this.createdAt = new Date().toISOString()
+    // FIXME why no access to Model.fn()?
+    // this.createdAt = Model.fn().now(6)
   }
 
   $beforeUpdate() {
-    this.updatedAt = Model.fn().now(6)
+    this.updatedAt = new Date().toISOString()
+    // FIXME why no access to Model.fn()?
+    // this.updatedAt = Model.fn().now(6)
   }
 }
 
