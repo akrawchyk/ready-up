@@ -1,5 +1,5 @@
 const fp = require('fastify-plugin')
-const ReadyUp = require('../../ready-up')
+const ReadyUp = require('ready-up-sdk')
 
 function fastifyReadyUp (fastify, opts, next) {
   fastify.decorate('ReadyUp', ReadyUp)

@@ -1,0 +1,22 @@
+{
+  "name": "ready-up",
+  "version": "0.1.0",
+  "description": "ready up",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js"
+  },
+  "author": "Andrew Krawchyk",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "fastify": "^1.12.1",
+    "fastify-plugin": "^1.2.1",
+    "http-status": "^1.2.0",
+    "pg": "^7.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4",
+    "sqlite3": "^4.0.2"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "fastify-ready-up",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Krawchyk",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "fastify-plugin": "^1.2.1"
+  }
+}

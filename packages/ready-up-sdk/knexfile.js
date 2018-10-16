@@ -1,4 +1,4 @@
-const { pgConnectionString } = require('./options')
+const { pgConnectionString } = require('ready-up-options')
 
 module.exports = {
   development: {

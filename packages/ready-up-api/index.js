@@ -1,11 +1,11 @@
 const fastify = require('fastify')({ logger: true })
-const { httpPort, pgConnectionString } = require('../options')
+const { httpPort, pgConnectionString } = require('ready-up-options')
 
-fastify.register(require('./plugins/fastify-http-status'))
-fastify.register(require('./plugins/fastify-objection'), { pgConnectionString })
+fastify.register(require('fastify-objection'), { pgConnectionString })
   .after(err => {
     if (err) throw err
   })
+fastify.register(require('./plugins/fastify-http-status'))
 fastify.register(require('./plugins/fastify-errors'))
 fastify.register(require('./plugins/fastify-ready-up'))
 
