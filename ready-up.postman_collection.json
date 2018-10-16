@@ -1,0 +1,528 @@
+{
+	"info": {
+		"_postman_id": "a0d6e171-5605-422e-9afc-a00a0b7d4d91",
+		"name": "ready-up",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get non-existing user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1627aac-4695-4017-8e07-dc967765af54",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unsuccessful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6149cde-fb63-4bcd-9c0b-bf9a7e4188b6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"user exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.displayName).to.eql('testUserPOST');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"displayName\": \"testUserPOST\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get existing user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf62cf20-d6e4-4bd1-941f-c7366b102b2c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"user exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.displayName).to.eql('testUserPOST');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create existing  user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6a1530fd-b9b6-4d5a-90dd-5f5be7948ff7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(409);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"displayName\": \"testUserPOST\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get non-existing lobby",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b141f641-78ed-4ae5-bfd7-5d4f2f8caa32",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unsuccessful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/lobbies/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create lobby",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3087a45b-4ad9-42d3-9a24-383c1293fafb",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"lobby exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.createdByUserId).to.eql(1);",
+							"    pm.expect(jsonData.displayName).to.eql('testLobbyPOST');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"createdByUserId\": \"1\",\n  \"displayName\": \"testLobbyPOST\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get existing lobby",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "645d3d26-27cc-44c3-8d56-02eeca2ecb23",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"lobby exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.displayName).to.eql('testLobbyPOST');",
+							"    pm.expect(jsonData.lobbyMembers).to.eql([])",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/lobbies/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get non-existing lobbyMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b78480ec-069d-43b2-bf19-4e08b008d330",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unsuccessful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create lobbyMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f0b7bbb0-5f2d-4522-8f36-0ea5acc2616c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"lobbyMember exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.lobbyId).to.eql(1);",
+							"    pm.expect(jsonData.userId).to.eql(1);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"1\",\n\t\"userId\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get existing lobbyMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3ea2c972-2528-47ec-b1e5-2dd70071cd23",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"lobbyMember exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.userId).to.eql(1);",
+							"    pm.expect(jsonData.lobbyId).to.eql(1)",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create existing lobbyMember",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e034c01c-1d5c-4805-b57a-438824a6f8c2",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(409);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"1\",\n\t\"userId\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -26,11 +26,10 @@ function userRoutes (fastify, opts, next) {
 
       if (!displayName) {
         reply.code(fastify.status.UNPROCESSABLE_ENTITY)
-        return new Error('Required parameter missing: displayName')
+        return new fastify.MissingParameterError('displayName')
       }
 
-      const newUser = await fastify.User.query()
-        .insert({ displayName })
+      const newUser = await fastify.ReadyUp.createUser({ displayName })
       reply.code(fastify.status.CREATED)
 
       return newUser
@@ -56,15 +55,7 @@ function userRoutes (fastify, opts, next) {
     },
     async function getUser (request, reply) {
       const { userId } = request.params
-
-      const user = await fastify.User.query()
-        .findById(userId)
-
-      if (!user) {
-        reply.code(fastify.status.NOT_FOUND)
-        return new fastify.Model.NotFoundError()
-      }
-
+      const user = await fastify.ReadyUp.getUser({ id: userId })
       return user
     }
   )

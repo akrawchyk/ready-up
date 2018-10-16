@@ -1,15 +1,14 @@
-const fastify = require('fastify')({
-  logger: true
-})
-const fastifyHttpStatus = require('./plugins/fastify-http-status')
-const fastifyObjection = require('./plugins/fastify-objection')
-const { httpPort, pgConnectionString } = require('./options')
+const fastify = require('fastify')({ logger: true })
+const { httpPort, pgConnectionString } = require('../options')
 
-fastify.register(fastifyHttpStatus)
-fastify.register(fastifyObjection, { pgConnectionString })
+fastify.register(require('./plugins/fastify-http-status'))
+fastify.register(require('./plugins/fastify-objection'), { pgConnectionString })
   .after(err => {
     if (err) throw err
   })
+fastify.register(require('./plugins/fastify-errors'))
+fastify.register(require('./plugins/fastify-ready-up'))
+
 fastify.register(require('./users'))
 fastify.register(require('./lobbies'))
 fastify.register(require('./lobbyMembers'))

@@ -7,8 +7,17 @@ module.exports = {
     migrations: {
       tableName: 'readyUpMigrations'
     }
+  },
+
+  test: {
+    client: 'sqlite3',
+    connection: { filename: ':memory:' },
+    pool: {
+      min: 1,
+      max: 1
+    }
   }
-  //
+
   // production: {
   //   client: 'postgresql',
   //   connection: {

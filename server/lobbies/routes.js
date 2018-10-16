@@ -24,23 +24,14 @@ function lobbyRoutes (fastify, opts, next) {
     async function createLobby (request, reply) {
       const { displayName, createdByUserId } = request.body
 
-      if (!displayName) {
-        // TODO assign random displayName
-      }
-
       if (!createdByUserId) {
         reply.code(fastify.status.UNPROCESSABLE_ENTITY)
         return new Error('Required parameter missing: createdByUserId')
       }
 
-      try {
-        const newLobby = await fastify.Lobby.query()
-          .insert({ createdByUserId, displayName })
-        reply.code(fastify.status.CREATED)
-        return newLobby
-      } catch (err) {
-        throw err
-      }
+      newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
+      reply.code(fastify.status.CREATED)
+      return newLobby
     }
   )
 
@@ -72,21 +63,8 @@ function lobbyRoutes (fastify, opts, next) {
     },
     async function getLobby (request, reply) {
       const { lobbyId } = request.params
-
-      try {
-        const lobby = await fastify.Lobby.query()
-          .eager('lobbyMembers')
-          .findById(lobbyId)
-
-        if (!lobby) {
-          reply.code(fastify.status.NOT_FOUND)
-          return new fastify.Model.NotFoundError()
-        }
-
-        return lobby
-      } catch (err) {
-        throw err
-      }
+      const lobby = await fastify.ReadyUp.getLobby({ id: lobbyId })
+      return lobby
     }
   )
 
