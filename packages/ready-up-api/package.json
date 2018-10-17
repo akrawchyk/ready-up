@@ -12,11 +12,9 @@
   "dependencies": {
     "fastify": "^1.12.1",
     "fastify-plugin": "^1.2.1",
-    "http-status": "^1.2.0",
-    "pg": "^7.5.0"
+    "http-status": "^1.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4",
-    "sqlite3": "^4.0.2"
+    "nodemon": "^1.18.4"
   }
 }

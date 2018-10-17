@@ -10,6 +10,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "knex": "^0.15.2",
-    "objection": "^1.3.0"
+    "objection": "^1.3.0",
+    "objection-db-errors": "^1.0.0",
+    "pg": "^7.5.0"
   }
 }

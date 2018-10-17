@@ -1,14 +1,6 @@
 const fastify = require('fastify')({ logger: true })
-const { httpPort, pgConnectionString } = require('ready-up-options')
-const { BaseModel } = require('ready-up-sdk')
+const { httpPort } = require('ready-up-options')
 
-fastify.register(require('fastify-objection'), {
-  pgConnectionString,
-  BaseModelClass: BaseModel
-})
-  .after(err => {
-    if (err) throw err
-  })
 fastify.register(require('fastify-ready-up'))
 fastify.register(require('./plugins/fastify-http-status'))
 fastify.register(require('./plugins/fastify-errors'))
@@ -19,6 +11,12 @@ fastify.register(require('./lobbyMembers'))
 
 const listen = async () => {
   try {
+    await fastify.ready(err => {
+      if (err) {
+        throw err
+      }
+    })
+
     const address = await fastify.listen(httpPort, '0.0.0.0')
     fastify.log.info(`server listening on ${address}`)
   } catch (err) {
