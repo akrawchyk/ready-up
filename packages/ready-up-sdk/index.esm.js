@@ -9,4 +9,4 @@ const iface = {
   async getLobbyMember () { return Promise.reject('not implemented') }
 }
 
-module.exports = iface
+export default iface

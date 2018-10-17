@@ -61,8 +61,7 @@ function readyUpPgConnector(sdk, opts) {
 
   BaseModel.knex(knex)
 
-  const implementation = Object.keys(pgInterface)
-    .filter(k => k !== 'BaseModel')
+  const implementation = Object.keys(sdk)
     .reduce((impl, fnName) => {
     return Object.assign(impl, {
       [fnName]: new Proxy(sdk[fnName], {

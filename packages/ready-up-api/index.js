@@ -2,6 +2,7 @@ const fastify = require('fastify')({ logger: true })
 const { httpPort } = require('ready-up-options')
 
 fastify.register(require('fastify-sensible'))
+fastify.register(require('fastify-cors')) // FIXME configure for prod
 fastify.register(require('fastify-ready-up'))
 fastify.register(require('./plugins/fastify-errors'))
 

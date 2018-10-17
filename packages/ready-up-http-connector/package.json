@@ -2,7 +2,7 @@
   "name": "ready-up-http-connector",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "module": "index.esm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
