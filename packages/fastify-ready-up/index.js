@@ -1,8 +1,11 @@
 const fp = require('fastify-plugin')
 const status = require('http-status')
 const Knex = require('knex')
-const { Model, ValidationError, NotFoundError } = require('objection')
 const {
+  ValidationError,
+  NotFoundError } = require('objection')
+const {
+  wrapError,
   DBError,
   UniqueViolationError,
   ForeignKeyViolationError } = require('objection-db-errors')
@@ -29,19 +32,27 @@ function fastifyReadyUp (fastify, opts, next) {
 
   fastify.decorate('ReadyUp', ReadyUp)
   // FIXME
-  // fastify.setErrorHandler(async function (err, request, reply) {
-  //   if (err instanceof ValidationError) {
-  //     reply.code(status.UNPROCESSABLE_ENTITY)
-  //   } else if (err instanceof NotFoundError) {
-  //     reply.code(status.NOT_FOUND)
-  //   } else if (err instanceof UniqueViolationError) {
-  //     reply.code(status.CONFLICT)
-  //   } else if (err instanceof ForeignKeyViolationError) {
-  //     reply.code(status.CONFLICT)
-  //   }
-  //
-  //   return new Error(err.type)
-  // })
+  fastify.setErrorHandler(async function (err, request, reply) {
+    err = wrapError(err)
+
+    if (err instanceof ValidationError) {
+      reply.unprocessableEntity()
+      return new Error(err.type)
+    } else if (err instanceof NotFoundError) {
+      reply.notFound()
+      return new Error(err.type)
+    } else if (err instanceof UniqueViolationError) {
+      reply.conflict()
+      return new Error(err.type)
+    } else if (err instanceof ForeignKeyViolationError) {
+      reply.conflict()
+      return new Error(err.type)
+    } else if (err instanceof DBError) {
+      return err
+    }
+
+    return err
+  })
   fastify.addHook('onClose', async (instance, done) => {
     try {
       await knex.destroy()

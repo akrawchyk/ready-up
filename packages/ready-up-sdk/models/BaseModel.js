@@ -1,7 +1,6 @@
 const { Model } = require('objection')
-const { DbErrors } = require('objection-db-errors')
 
-class BaseModel extends DbErrors(Model) {
+class BaseModel extends Model {
   static get modelPaths() {
     return [__dirname]
   }
