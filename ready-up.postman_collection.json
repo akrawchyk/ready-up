@@ -6,14 +6,128 @@
 	},
 	"item": [
 		{
+			"name": "empty create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bbb81fd-efd1-43b1-8501-e6dcfd75c1c8",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.displayName should NOT be shorter than 1 characters');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"displayName\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5a32f272-3315-4f9d-abd1-a1d36aa31423",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.displayName should NOT be shorter than 1 characters');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"displayName\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get non-existing user",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "d1627aac-4695-4017-8e07-dc967765af54",
+						"id": "1f6d5c3d-8bea-47b8-8fdc-aa6505af6346",
 						"type": "text/javascript",
 						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Not Found');",
+							"    pm.expect(jsonData.message).to.eql('Not Found');",
+							"});",
+							"",
 							"pm.test(\"Unsuccessful GET request\", function () {",
 							"    pm.expect(pm.response.code).to.eql(404);",
 							"});",
@@ -152,9 +266,15 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6a1530fd-b9b6-4d5a-90dd-5f5be7948ff7",
+						"id": "49440a48-404c-45ee-a37c-dc33edc322b7",
 						"type": "text/javascript",
 						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Conflict');",
+							"    pm.expect(jsonData.message).to.eql('Conflict');",
+							"});",
+							"",
 							"pm.test(\"Unsuccessful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.eql(409);",
 							"});",
@@ -194,14 +314,128 @@
 			"response": []
 		},
 		{
+			"name": "empty create lobby - createdByUserId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d11bf3f0-87d6-4e78-947b-d2068b6b39c4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.createdByUserId should be number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"displayName\": \"\",\n\t\"createdByUserId\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid create lobby - createdByUserId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc46ab7c-0de3-417d-a7a8-31702e4e9c57",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.createdByUserId should be >= 1');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayName\": \"testLobbyPOST\",\n    \"createdByUserId\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get non-existing lobby",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "b141f641-78ed-4ae5-bfd7-5d4f2f8caa32",
+						"id": "d2039204-ab6b-41e5-8398-1a671c0e3ece",
 						"type": "text/javascript",
 						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Not Found');",
+							"    pm.expect(jsonData.message).to.eql('Not Found');",
+							"});",
+							"",
 							"pm.test(\"Unsuccessful GET request\", function () {",
 							"    pm.expect(pm.response.code).to.eql(404);",
 							"});",
@@ -293,7 +527,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "645d3d26-27cc-44c3-8d56-02eeca2ecb23",
+						"id": "48f69809-f58a-4553-87ea-0d09a9942e91",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"lobby exists\", function () {",
@@ -336,14 +570,236 @@
 			"response": []
 		},
 		{
+			"name": "empty create lobbyMember - lobbyId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11c3870c-f6fa-4eac-aae9-2d1e50819467",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.lobbyId should be number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"\",\n\t\"userId\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "empty create lobbyMember - userId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "78be8828-d74d-4145-9054-a240691a06f6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.userId should be number');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"1\",\n\t\"userId\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid create lobbyMember - lobbyId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9c836edf-817c-4be5-a3f0-c82b42125c98",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.lobbyId should be >= 1');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"0\",\n\t\"userId\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invalid create lobbyMember - userId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f645c0ae-fa65-4331-bfdc-90d9a371c6b8",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Bad Request');",
+							"    pm.expect(jsonData.message).to.eql('body.userId should be >= 1');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"lobbyId\": \"1\",\n\t\"userId\": \"0\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/lobbyMembers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get non-existing lobbyMember",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "b78480ec-069d-43b2-bf19-4e08b008d330",
+						"id": "dfa56d1e-7953-47a6-9b05-5aa96e3a0af0",
 						"type": "text/javascript",
 						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Not Found');",
+							"    pm.expect(jsonData.message).to.eql('Not Found');",
+							"});",
+							"",
 							"pm.test(\"Unsuccessful GET request\", function () {",
 							"    pm.expect(pm.response.code).to.eql(404);",
 							"});",
@@ -435,7 +891,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3ea2c972-2528-47ec-b1e5-2dd70071cd23",
+						"id": "800e4169-415c-4ac7-943b-52b2d2281a90",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"lobbyMember exists\", function () {",
@@ -443,6 +899,7 @@
 							"    pm.expect(jsonData.id).to.eql(1);",
 							"    pm.expect(jsonData.userId).to.eql(1);",
 							"    pm.expect(jsonData.lobbyId).to.eql(1)",
+							"    pm.expect(jsonData.ready).to.eql(false)",
 							"});",
 							"",
 							"",
@@ -483,9 +940,15 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e034c01c-1d5c-4805-b57a-438824a6f8c2",
+						"id": "f05bb1a4-df3c-4114-be42-7e71f2940dff",
 						"type": "text/javascript",
 						"exec": [
+							"pm.test(\"error message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql('Conflict');",
+							"    pm.expect(jsonData.message).to.eql('Conflict');",
+							"});",
+							"",
 							"pm.test(\"Unsuccessful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.eql(409);",
 							"});",
@@ -519,6 +982,54 @@
 					"port": "3000",
 					"path": [
 						"lobbyMembers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get existing lobby with lobbyMembers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1d686fdc-7aee-464f-99be-d4e0a824cdf2",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"lobby exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.displayName).to.eql('testLobbyPOST');",
+							"    pm.expect(jsonData.lobbyMembers).to.eql([{ id: 1 }])",
+							"});",
+							"",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 50ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(50);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/lobbies/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lobbies",
+						"1"
 					]
 				}
 			},

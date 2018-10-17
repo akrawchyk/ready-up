@@ -31,7 +31,6 @@ function fastifyReadyUp (fastify, opts, next) {
   ReadyUp.BaseModel.knex(knex)
 
   fastify.decorate('ReadyUp', ReadyUp)
-  // FIXME
   fastify.setErrorHandler(async function (err, request, reply) {
     err = wrapError(err)
 

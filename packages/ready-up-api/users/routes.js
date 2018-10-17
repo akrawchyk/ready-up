@@ -26,7 +26,6 @@ function userRoutes (fastify, opts, next) {
       const { displayName } = request.body
 
       if (!displayName) {
-        // FIXME use json schema to validate
         const error = new fastify.InvalidParametersError('displayName')
         reply.unprocessableEntity(error.message)
         return error

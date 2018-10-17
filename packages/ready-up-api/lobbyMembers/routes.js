@@ -32,7 +32,6 @@ function lobbyMemberRoutes (fastify, opts, next) {
       const { lobbyId, userId } = request.body
 
       if (!lobbyId || !userId) {
-        // FIXME use json schema to validate
         let error
         if (!lobbyId) error = new fastify.InvalidParametersError('lobbyId')
         if (!userId) error = new fastify.InvalidParametersError('userId')
