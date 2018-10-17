@@ -1,5 +1,5 @@
 {
-  "name": "ready-up-sdk",
+  "name": "ready-up-pg-connector",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,8 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
-    "objection": "^1.3.0"
+    "knex": "^0.15.2",
+    "objection": "^1.3.0",
+    "pg": "^7.5.0"
   }
 }

@@ -1,6 +1,4 @@
 const fp = require('fastify-plugin')
-const status = require('http-status')
-const Knex = require('knex')
 const {
   ValidationError,
   NotFoundError } = require('objection')
@@ -9,28 +7,19 @@ const {
   DBError,
   UniqueViolationError,
   ForeignKeyViolationError } = require('objection-db-errors')
-const ReadyUp = require('ready-up-sdk')
+const pgConnector = require('ready-up-pg-connector')
+const ReadyUpSDK = require('ready-up-sdk')
 const { pgConnectionString } = require('ready-up-options')
 
 function fastifyReadyUp (fastify, opts, next) {
-  let knex
-
   try {
-    const isDevelopment = process.env.NODE_ENV !== 'production'
-    knex = Knex({
-      client: 'pg',
-      useNullAsDefault: true,
-      asyncStackTraces: isDevelopment,
-      connection: pgConnectionString
-    })
-  } catch(err) {
+    readyUpSDK = pgConnector(ReadyUpSDK, { pgConnectionString })
+  } catch (err) {
     next(err)
     return
   }
 
-  ReadyUp.BaseModel.knex(knex)
-
-  fastify.decorate('ReadyUp', ReadyUp)
+  fastify.decorate('ReadyUp', readyUpSDK)
   fastify.setErrorHandler(async function (err, request, reply) {
     err = wrapError(err)
 
