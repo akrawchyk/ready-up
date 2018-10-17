@@ -12,6 +12,7 @@ function readyUpHTTPConnector(sdk, opts) {
 
     async getUser ({ id }) {
       return await Request.get(`${API_URL}/users/${id}`)
+        .set('accept', 'json')
     },
 
     async createLobby ({ createdByUserId, displayName }) {
@@ -25,6 +26,7 @@ function readyUpHTTPConnector(sdk, opts) {
 
     async getLobby ({ id }) {
       return Request.get(`${API_URL}/lobbies/${id}`)
+        .set('accept', 'json')
     },
 
     async createLobbyMember ({ lobbyId, userId }) {
@@ -38,6 +40,7 @@ function readyUpHTTPConnector(sdk, opts) {
 
     async getLobbyMember ({ id }) {
       return await Request.get(`${API_URL}/lobbyMembers/${id}`)
+        .set('accept', 'json')
     }
   }
 

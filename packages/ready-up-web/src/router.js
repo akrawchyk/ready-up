@@ -30,6 +30,11 @@ export default new Router({
             path: '/users/new',
             name: 'usersCreate',
             component: () => import('./views/UsersEdit.vue')
+          },
+          {
+            path: '/users/:userId',
+            name: 'usersShow',
+            component: () => import('./views/UsersShow.vue')
           }
         ]
     }

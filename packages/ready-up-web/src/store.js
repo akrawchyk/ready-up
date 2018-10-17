@@ -27,14 +27,18 @@ export default new Vuex.Store({
     async createUser ({ dispatch, commit }, userParams) {
       try {
         const newUser = await readyUpSDK.createUser(userParams)
-        commit('setCurrentUser', newUser)
+        commit('setCurrentUser', newUser.body)
       } catch (err) {
         throw err
       }
     },
-    async getUser ({ dispatch, commit }, userQueryParams) {
-      const viewingUser = await readyUpSDK.getUser(userQueryParams)
-      commit('setViewingUser', viewingUser)
+    async getUser ({ dispatch, commit }, userQuery) {
+      try {
+        const viewingUser = await readyUpSDK.getUser(userQuery)
+        commit('setViewingUser', viewingUser.body)
+      } catch (err) {
+        throw err
+      }
     }
   }
 })

@@ -1,5 +1,6 @@
 <template>
-  <div class="usersEdit">
+  <div id="usersEdit">
+    <ErrorList :errors="errors" />
     <form @submit.prevent="onSave()">
       <fieldset
         class="form-group"
@@ -22,17 +23,23 @@
 </template>
 
 <script>
+import ErrorList from '@/components/ErrorList'
+import { formUtilsMixin } from '@/mixins'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'UsersEdit',
+  components: {
+    ErrorList
+  },
   data () {
     return {
       creatingUser: {},
       inProgress: false,
-      errors: {}
+      errors: []
     }
   },
+  mixins: [formUtilsMixin],
   computed: {
     userParams () {
       return {
@@ -40,7 +47,6 @@ export default {
       }
     }
   },
-
   methods: {
     ...mapActions([
       'createUser'
@@ -51,20 +57,18 @@ export default {
       // ;(this.multiLot.id
       //   ? this.editMultiLot(id, article)
       //   : this.createMultiLot(article))
-      this.errors = {}
-      this.inProgress = true
+
+      this.setProgress()
 
       try {
         await this.createUser(this.userParams)
-        this.inProgress = false
+        this.reset()
         this.creatingUser = {}
-        this.errors = {}
         this.$router.push({
           name: 'usersHome'
         })
-      } catch(error) {
-        this.inProgress = false
-        this.errors = { lots: [error.message] }
+      } catch (error) {
+        this.setError(error)
       }
     }
   }
