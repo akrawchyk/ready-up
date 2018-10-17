@@ -1,7 +1,7 @@
 import Request from 'superagent'
 
 function readyUpHTTPConnector(sdk, opts) {
-  const API_URL = opts.apiURL || 'http://localhost:3000'
+  const API_URL = opts.apiURL || 'https://localhost:3000'
 
   const httpInterface = {
     async createUser ({ displayName }) {

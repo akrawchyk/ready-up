@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import ReadyUpSDK from 'ready-up-sdk'
 import httpConnector from 'ready-up-http-connector'
 
-const readyUpSDK = httpConnector(ReadyUpSDK, { apiURL: 'http://localhost:3000' })
+const readyUpSDK = httpConnector(ReadyUpSDK, { apiURL: 'https://localhost:3000' })
 
 console.log(readyUpSDK)
 

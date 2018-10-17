@@ -1,4 +1,13 @@
-const fastify = require('fastify')({ logger: true })
+const { join } = require('path')
+const { readFileSync } = require('fs')
+
+const fastify = require('fastify')({
+  logger: true,
+  https: {
+    key: readFileSync(join(__dirname, 'server.key')),
+    cert: readFileSync(join(__dirname, 'server.crt'))
+  }
+})
 const { httpPort } = require('ready-up-options')
 
 fastify.register(require('fastify-sensible'))
