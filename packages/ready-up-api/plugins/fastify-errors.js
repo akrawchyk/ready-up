@@ -1,13 +1,13 @@
 const fp = require('fastify-plugin')
 
-class RequiredParametersMissingError extends Error {
+class InvalidParametersError extends Error {
   constructor(missingParameterKey) {
-    super(`Required parameter missing: ${missingParameterKey}`)
+    super(`Invalid parameters: ${missingParameterKey}`)
   }
 }
 
 function fastifyErrors (fastify, opts, next) {
-  fastify.decorate('RequiredParametersMissingError', RequiredParametersMissingError)
+  fastify.decorate('InvalidParametersError', InvalidParametersError)
   next()
 }
 

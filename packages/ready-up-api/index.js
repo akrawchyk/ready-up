@@ -1,8 +1,8 @@
 const fastify = require('fastify')({ logger: true })
 const { httpPort } = require('ready-up-options')
 
+fastify.register(require('fastify-sensible'))
 fastify.register(require('fastify-ready-up'))
-fastify.register(require('./plugins/fastify-http-status'))
 fastify.register(require('./plugins/fastify-errors'))
 
 fastify.register(require('./users'))

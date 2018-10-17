@@ -6,7 +6,10 @@ function lobbyRoutes (fastify, opts, next) {
           type: 'object',
           properties: {
             displayName: { type: 'string' },
-            createdByUserId: { type: 'number' }
+            createdByUserId: {
+              type: 'number',
+              minimum: 1
+            }
           }
         },
         response: {
@@ -25,12 +28,13 @@ function lobbyRoutes (fastify, opts, next) {
       const { displayName, createdByUserId } = request.body
 
       if (!createdByUserId) {
-        reply.code(fastify.status.UNPROCESSABLE_ENTITY)
-        return new Error('Required parameter missing: createdByUserId')
+        const error = new fastify.InvalidParametersError('createdByUserId')
+        reply.unprocessableEntity(error.message)
+        return error
       }
 
       newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
-      reply.code(fastify.status.CREATED)
+      reply.code(201)
       return newLobby
     }
   )

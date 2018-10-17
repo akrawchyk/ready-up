@@ -5,10 +5,11 @@ function userRoutes (fastify, opts, next) {
         body: {
           type: 'object',
           properties: {
-            displayName: { type: 'string' }
+            displayName: {
+              type: 'string',
+              minLength: 1
+            }
           }
-          // FIXME: required keys arent validated by fastify
-          // required: ['displayName']
         },
         response: {
           201: {
@@ -25,13 +26,14 @@ function userRoutes (fastify, opts, next) {
       const { displayName } = request.body
 
       if (!displayName) {
-        reply.code(fastify.status.UNPROCESSABLE_ENTITY)
-        return new fastify.MissingParameterError('displayName')
+        // FIXME use json schema to validate
+        const error = new fastify.InvalidParametersError('displayName')
+        reply.unprocessableEntity(error.message)
+        return error
       }
 
       const newUser = await fastify.ReadyUp.createUser({ displayName })
-      reply.code(fastify.status.CREATED)
-
+      reply.code(201)
       return newUser
     }
   )

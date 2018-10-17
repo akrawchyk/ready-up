@@ -5,8 +5,14 @@ function lobbyMemberRoutes (fastify, opts, next) {
         body: {
           type: 'object',
           properties: {
-            lobbyId: { type: 'number' },
-            userId: { type: 'number' }
+            lobbyId: {
+              type: 'number',
+              minimum: 1
+            },
+            userId: {
+              type: 'number',
+              minimum: 1
+            }
           }
         },
         response: {
@@ -26,14 +32,16 @@ function lobbyMemberRoutes (fastify, opts, next) {
       const { lobbyId, userId } = request.body
 
       if (!lobbyId || !userId) {
-        reply.code(fastify.status.UNPROCESSABLE_ENTITY)
-        if (!lobbyId) error = new fastify.MissingParameterError('lobbyId')
-        if (!userId) error = new fastify.MissingParameterError('userId')
+        // FIXME use json schema to validate
+        let error
+        if (!lobbyId) error = new fastify.InvalidParametersError('lobbyId')
+        if (!userId) error = new fastify.InvalidParametersError('userId')
+        reply.unprocessableEntity(error.message)
         return error
       }
 
       const newLobbyMember = await fastify.ReadyUp.createLobbyMember({ lobbyId, userId })
-      reply.code(fastify.status.CREATED)
+      reply.code(201)
       return newLobbyMember
     }
   )
