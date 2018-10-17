@@ -22,19 +22,24 @@ function fastifyReadyUp (fastify, opts, next) {
   fastify.decorate('ReadyUp', readyUpSDK)
   fastify.setErrorHandler(async function (err, request, reply) {
     err = wrapError(err)
+    const retError = new Error()
 
     if (err instanceof ValidationError) {
-      reply.unprocessableEntity()
-      return new Error(err.type)
+      reply.code(422)
+      retError.message = 'Unprocessable Entity'
+      return retError
     } else if (err instanceof NotFoundError) {
-      reply.notFound()
-      return new Error(err.type)
+      reply.code(404)
+      retError.message = 'Not Found'
+      return retError
     } else if (err instanceof UniqueViolationError) {
-      reply.conflict()
-      return new Error(err.type)
+      reply.code(409)
+      retError.message = 'Conflict'
+      return retError
     } else if (err instanceof ForeignKeyViolationError) {
-      reply.conflict()
-      return new Error(err.type)
+      reply.code(409)
+      retError.message = 'Conflict'
+      return retError
     } else if (err instanceof DBError) {
       return err
     }
