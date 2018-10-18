@@ -27,7 +27,7 @@ function userRoutes (fastify, opts, next) {
 
       if (!displayName) {
         const error = new fastify.InvalidParametersError('displayName')
-        reply.unprocessableEntity(error.message)
+        reply.code(422)
         return error
       }
 

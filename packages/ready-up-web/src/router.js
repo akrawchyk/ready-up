@@ -15,28 +15,50 @@ export default new Router({
     },
     {
       path: '/users',
-      name: 'users',
+      name: '',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ './views/Users.vue'),
+        component: () => import(/* webpackChunkName: "users" */'./views/Users.vue'),
         children: [
           {
             path: '',
             name: 'usersHome',
-            component: () => import('./views/UsersHome.vue')
+            component: () => import(/* webpackChunkName: "usersHome" */'./views/UsersHome.vue')
           },
           {
             path: '/users/new',
             name: 'usersCreate',
-            component: () => import('./views/UsersEdit.vue')
+            component: () => import(/* webpackChunkName: "usersEdit" */'./views/UsersEdit.vue')
           },
           {
             path: '/users/:userId',
             name: 'usersShow',
-            component: () => import('./views/UsersShow.vue')
+            component: () => import(/* webpackChunkName: "usersShow" */'./views/UsersShow.vue')
           }
         ]
+    },
+    {
+      path: '/lobbies',
+      name: '',
+      component: () => import(/* webpackChunkName: "lobbies" */'./views/Lobbies.vue'),
+      children: [
+        {
+          path: '',
+          name: 'lobbiesHome',
+          component: () => import(/* webpackChunkName: "lobbiesHome" */'./views/LobbiesHome.vue')
+        },
+        {
+          path: '/lobbies/new',
+          name: 'lobbiesCreate',
+          component: () => import(/* webpackChunkName: "lobbiesEdit" */'./views/LobbiesEdit.vue')
+        },
+        {
+          path: '/lobbies/:lobbyId',
+          name: 'lobbiesShow',
+          component: () => import(/* webpackChunkName: "lobbiesShow" */'./views/LobbiesShow.vue')
+        }
+      ]
     }
   ]
 })

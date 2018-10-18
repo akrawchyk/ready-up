@@ -14,6 +14,14 @@ class Notification extends Model {
           from: 'notifications.createdByUserId',
           to: 'users.id'
         }
+      },
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: `${__dirname}/User`,
+        join: {
+          from: 'notifications.recipientUserId',
+          to: 'users.id'
+        }
       }
     }
   }

@@ -18,7 +18,16 @@ function lobbyRoutes (fastify, opts, next) {
             properties: {
               id: { type: 'number' },
               displayName: { type: 'string' },
-              createdByUserId: { type: 'number' }
+              createdByUserId: { type: 'number' },
+              lobbyMembers: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                  }
+                }
+              }
             }
           }
         }
@@ -29,7 +38,7 @@ function lobbyRoutes (fastify, opts, next) {
 
       if (!createdByUserId) {
         const error = new fastify.InvalidParametersError('createdByUserId')
-        reply.unprocessableEntity(error.message)
+        reply.code(422)
         return error
       }
 

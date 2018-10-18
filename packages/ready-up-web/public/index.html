@@ -12,6 +12,62 @@
       <strong>We're sorry but ready-up-web doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-messaging.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAiuR85LRVjXMiDoWY-CyzrrvdYEETYDLc",
+        authDomain: "ready-up-f1555.firebaseapp.com",
+        databaseURL: "https://ready-up-f1555.firebaseio.com",
+        projectId: "ready-up-f1555",
+        storageBucket: "ready-up-f1555.appspot.com",
+        messagingSenderId: "751484056905"
+      };
+      firebase.initializeApp(config);
+
+      const messaging = firebase.messaging()
+      messaging.usePublicVapidKey("BCFiwoEwzv_5dAXgIU9Kn1HLvfj04byvUorg4vkYo9vHBJQmMHTa5TRD7nRMhNxjldvjkmAW10JGbUXmh4wgcHo")
+      messaging.requestPermission().then(function() {
+        console.log('Notification permission granted.');
+        messaging.getToken().then(function(currentToken) {
+          if (currentToken) {
+            console.log(currentToken)
+            // FIXME send token to the user
+            // sendTokenToServer(currentToken);
+            // updateUIForPushEnabled(currentToken);
+          } else {
+            // // Show permission request.
+              console.log('No Instance ID token available. Request permission to generate one.');
+            // // Show permission UI.
+              // updateUIForPushPermissionRequired();
+              // setTokenSentToServer(false);
+          }
+        }).catch(function(err) {
+          console.log('An error occurred while retrieving token. ', err);
+          // showToken('Error retrieving Instance ID token. ', err);
+          // setTokenSentToServer(false);
+        });
+      }).catch(function(err) {
+        console.log('Unable to get permission to notify.', err);
+      });
+
+      // Callback fired if Instance ID token is updated.
+      messaging.onTokenRefresh(function() {
+        messaging.getToken().then(function(refreshedToken) {
+          console.log('Token refreshed.');
+          // // Indicate that the new Instance ID token has not yet been sent to the
+          // // app server.
+          // setTokenSentToServer(false);
+          // // Send Instance ID token to app server.
+          // sendTokenToServer(refreshedToken);
+          // ...
+        }).catch(function(err) {
+          console.log('Unable to retrieve refreshed token ', err);
+          showToken('Unable to retrieve refreshed token ', err);
+        });
+      });
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>

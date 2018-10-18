@@ -1,17 +1,17 @@
 <template>
-  <div id="usersEdit">
+  <div id="lobbiesEdit">
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
-      <fieldset
-        class="form-group"
-        :disabled="inProgress">
-        <label for="displayName">Display Name</label>
-        <input
-          v-model="creatingUser.displayName"
-          class="form-control"
-          id="displayName"
-          type="text">
-      </fieldset>
+      <!-- <fieldset -->
+      <!--   class="form&#45;group" -->
+      <!--   :disabled="inProgress"> -->
+      <!--   <label for="displayName">Display Name</label> -->
+      <!--   <input -->
+      <!--     v&#45;model="creatingUser.displayName" -->
+      <!--     class="form&#45;control" -->
+      <!--     id="displayName" -->
+      <!--     type="text"> -->
+      <!-- </fieldset> -->
       <button
         class="btn btn-primary"
         type="submit"
@@ -25,31 +25,34 @@
 <script>
 import ErrorList from '@/components/ErrorList'
 import { formUtilsMixin } from '@/mixins'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
-  name: 'UsersEdit',
+  name: 'LobbiesEdit',
   components: {
     ErrorList
   },
   mixins: [formUtilsMixin],
   data () {
     return {
-      creatingUser: {},
       inProgress: false,
       errors: []
     }
   },
   computed: {
-    userParams () {
+    ...mapState({
+      user: state => state.currentUser,
+      lobby: state => state.currentLobby
+    }),
+    lobbyParams () {
       return {
-        displayName: this.creatingUser.displayName
+        createdByUserId: this.user.id
       }
     }
   },
   methods: {
     ...mapActions([
-      'createUser'
+      'createLobby'
     ]),
 
     async onSubmit () {
@@ -61,11 +64,13 @@ export default {
       this.setProgress()
 
       try {
-        await this.createUser(this.userParams)
+        await this.createLobby(this.lobbyParams)
         this.reset()
-        this.creatingUser = {}
         this.$router.push({
-          name: 'usersHome'
+          name: 'lobbiesShow',
+          params: {
+            lobbyId: this.lobby.id
+          }
         })
       } catch (error) {
         this.setError(error)

@@ -16,7 +16,7 @@ function readyUpHTTPConnector(sdk, opts) {
     },
 
     async createLobby ({ createdByUserId, displayName }) {
-      return await Request.post(`${API_URL}/users`)
+      return await Request.post(`${API_URL}/lobbies`)
         .send({
           createdByUserId,
           displayName
@@ -30,7 +30,7 @@ function readyUpHTTPConnector(sdk, opts) {
     },
 
     async createLobbyMember ({ lobbyId, userId }) {
-      return await Request.post(`${API_URL}/users`)
+      return await Request.post(`${API_URL}/lobbyMembers`)
         .send({
           lobbyId,
           userId

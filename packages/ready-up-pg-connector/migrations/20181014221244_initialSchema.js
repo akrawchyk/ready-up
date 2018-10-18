@@ -26,6 +26,7 @@ exports.up = function(knex, Promise) {
     .createTable('notifications', table => {
       table.increments('id').primary()
       table.integer('createdByUserId').unsigned().references('users.id')
+      table.integer('recipientUserId').unsigned().references('users.id')
       table.boolean('sent').defaultTo(false)
       table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6))
       table.timestamp('updatedAt', 6)
@@ -34,6 +35,7 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
   return knex.schema
+    .dropTable('notifications')
     .dropTable('lobbyMembers')
     .dropTable('lobbies')
     .dropTable('users')

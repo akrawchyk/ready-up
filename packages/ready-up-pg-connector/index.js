@@ -29,6 +29,7 @@ const pgInterface = {
       trx = await transaction.start(knex)
 
       // FIXME query friends
+      // FIXME query allowed permission
       const invitees = await User.query()
         .whereNot({ id: createdByUserId })
         .limit(4)
@@ -41,17 +42,26 @@ const pgInterface = {
         }))
 
       const newLobby = await Lobby.query()
-        .insertGraph([{
+        .insertGraphAndFetch([{
           '#id': 'newLobby',
           createdByUserId,
           displayName,
           lobbyMembers: invitees
         }])
+        .then(graph => graph[0])
+
+      await Notification.query()
+        .insert(newLobby.lobbyMembers
+          .filter(lobbyMember => lobbyMember.id !== createdByUserId)
+          .map(lobbyMember => {
+            return {
+              recipientUserId: lobbyMember.userId,
+              createdByUserId
+            }
+          })
+        )
 
       // TODO send notification
-      const notification = await Notification.query()
-        .insert({ createdByUserId })
-        .returning(['id', 'sent', 'createdByUserId'])
 
       await trx.commit()
       return newLobby
