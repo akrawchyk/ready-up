@@ -33,7 +33,7 @@ function lobbyRoutes (fastify, opts, next) {
         return error
       }
 
-      newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
+      const newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
       reply.code(201)
       return newLobby
     }

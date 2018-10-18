@@ -6,8 +6,6 @@ import httpConnector from 'ready-up-http-connector'
 
 const readyUpSDK = httpConnector(ReadyUpSDK, { apiURL: 'https://localhost:3000' })
 
-console.log(readyUpSDK)
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({

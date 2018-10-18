@@ -1,12 +1,21 @@
-const iface = {
-  // BaseModel: {}, // for pg-connector only so far
-
-  async createUser () { return Promise.reject('not implemented') },
-  async getUser () { return Promise.reject('not implemented') },
-  async createLobby () { return Promise.reject('not implemented') },
-  async getLobby () { return Promise.reject('not implemented') },
-  async createLobbyMember () { return Promise.reject('not implemented') },
-  async getLobbyMember () { return Promise.reject('not implemented') }
+class NotImplementedError extends Error {
+  constructor() {
+    super('Not Implemented')
+  }
 }
 
-module.exports = iface
+const abstractInterface = {
+  // BaseModel: {}, // for pg-connector only so far
+
+  async createUser () { return Promise.reject(new NotImplementedError()) },
+  async getUser () { return Promise.reject(new NotImplementedError()) },
+  async createLobby () { return Promise.reject(new NotImplementedError()) },
+  async getLobby () { return Promise.reject(new NotImplementedError()) },
+  async createLobbyMember () { return Promise.reject(new NotImplementedError()) },
+  async getLobbyMember () { return Promise.reject(new NotImplementedError()) },
+  async createNotification () { return Promise.reject(new NotImplementedError()) },
+  async getNotification () { return Promise.reject(new NotImplementedError()) },
+}
+
+module.exports = abstractInterface
+module.exports.NotImplementedError = NotImplementedError

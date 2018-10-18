@@ -1,9 +1,11 @@
 const Knex = require('knex')
+const { transaction } = require('objection')
 const {
   BaseModel,
   User,
   Lobby,
-  LobbyMember } = require('./models')
+  LobbyMember,
+  Notification } = require('./models')
 
 const pgInterface = {
   BaseModel,
@@ -20,8 +22,43 @@ const pgInterface = {
   },
 
   async createLobby ({ createdByUserId, displayName }) {
-    return await Lobby.query()
-      .insert({ createdByUserId, displayName })
+    const knex = Notification.knex()
+    let trx
+
+    try {
+      trx = await transaction.start(knex)
+
+      // FIXME query friends
+      const invitees = await User.query()
+        .whereNot({ id: createdByUserId })
+        .limit(4)
+        .pluck('id')
+        .then(userIds => userIds.map(id => {
+          return {
+            userId: id,
+            lobbyId: "#ref{newLobby.id}"
+          }
+        }))
+
+      const newLobby = await Lobby.query()
+        .insertGraph([{
+          '#id': 'newLobby',
+          createdByUserId,
+          displayName,
+          lobbyMembers: invitees
+        }])
+
+      // TODO send notification
+      const notification = await Notification.query()
+        .insert({ createdByUserId })
+        .returning(['id', 'sent', 'createdByUserId'])
+
+      await trx.commit()
+      return newLobby
+    } catch (err) {
+      await trx.rollback()
+      throw err
+    }
   },
 
   async getLobby ({ id }) {
@@ -40,6 +77,18 @@ const pgInterface = {
     return await LobbyMember.query()
       .findById(id)
       .throwIfNotFound()
+  },
+
+  async createNotification ({ createdByUserId }) {
+    return await Notification.query()
+      .insert({ createdByUserId })
+      .returning(['id', 'sent', 'createdByUserId'])
+  },
+
+  async getNotification ({ id }) {
+    return await Notification.query()
+      .findById(id)
+      .throwIfNotFound()
   }
 }
 
@@ -55,22 +104,27 @@ function readyUpPgConnector(sdk, opts) {
       asyncStackTraces: isDevelopment,
       connection: pgConnectionString
     })
-  } catch(err) {
-    throw(err)
+  } catch (err) {
+    throw err
   }
 
   BaseModel.knex(knex)
 
   const implementation = Object.keys(sdk)
     .reduce((impl, fnName) => {
-    return Object.assign(impl, {
-      [fnName]: new Proxy(sdk[fnName], {
-        apply: async function(target, thisArg, argumentsList) {
-          return await pgInterface[fnName](...argumentsList)
-        }
+      if (typeof pgInterface[fnName] !== 'function') {
+        return Object.assign(impl, {
+          [fnName]: sdk[fnName]
+        })
+      }
+      return Object.assign(impl, {
+        [fnName]: new Proxy(sdk[fnName], {
+          apply: async function(target, thisArg, argumentsList) {
+            return await pgInterface[fnName](...argumentsList)
+          }
+        })
       })
-    })
-  }, {})
+    }, {})
 
   Object.assign(implementation, { BaseModel })
 

@@ -23,6 +23,13 @@ exports.up = function(knex, Promise) {
       table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6))
       table.timestamp('updatedAt', 6)
     })
+    .createTable('notifications', table => {
+      table.increments('id').primary()
+      table.integer('createdByUserId').unsigned().references('users.id')
+      table.boolean('sent').defaultTo(false)
+      table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6))
+      table.timestamp('updatedAt', 6)
+    })
 }
 
 exports.down = function(knex, Promise) {

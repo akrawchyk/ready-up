@@ -45,6 +45,11 @@ function readyUpHTTPConnector(sdk, opts) {
   }
 
   return Object.keys(sdk).reduce((impl, fnName) => {
+    if (typeof httpInterface[fnName] !== 'function') {
+      return Object.assign(impl, {
+        [fnName]: sdk[fnName]
+      })
+    }
     return Object.assign(impl, {
       [fnName]: new Proxy(sdk[fnName], {
         apply: async function(target, thisArg, argumentsList) {

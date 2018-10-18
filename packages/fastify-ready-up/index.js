@@ -42,6 +42,9 @@ function fastifyReadyUp (fastify, opts, next) {
       return retError
     } else if (err instanceof DBError) {
       return err
+    } else if (err instanceof ReadyUpSDK.NotImplementedError) {
+      reply.code(501)
+      return err
     }
 
     return err
