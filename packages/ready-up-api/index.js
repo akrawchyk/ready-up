@@ -11,7 +11,18 @@ const fastify = require('fastify')({
 const { httpPort } = require('ready-up-options')
 
 fastify.register(require('fastify-sensible'))
-fastify.register(require('fastify-cors')) // FIXME configure for prod
+fastify.register(require('fastify-cors'), {
+  origin: ['https://localhost:8080'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true
+})
+fastify.register(require('fastify-secure-session'), {
+  key: readFileSync(join(__dirname, 'secret-key')),
+  cookie: {
+    httpOnly: true,
+    secure: true
+  }
+})
 fastify.register(require('fastify-ready-up'))
 fastify.register(require('./plugins/fastify-errors'))
 

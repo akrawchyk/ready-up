@@ -36,6 +36,7 @@ function sessionRoutes (fastify, opts, next) {
       }
 
       const newSession = await fastify.ReadyUp.createSession({ userDisplayName, userPassword })
+      request.session.set('sessionId', newSession.id)
       reply.code(201)
       return newSession
     }

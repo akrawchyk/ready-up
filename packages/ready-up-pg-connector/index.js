@@ -22,6 +22,7 @@ const pgInterface = {
     if (match) {
       // TODO create new session
       return {
+        id: 109, // sessionId
         userId: user.id,
         userDisplayName: user.displayName
       }

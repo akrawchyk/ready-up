@@ -11,8 +11,10 @@
   "license": "UNLICENSED",
   "dependencies": {
     "fastify": "^1.12.1",
+    "fastify-cookie": "^2.0.2",
     "fastify-cors": "^0.1.0",
     "fastify-plugin": "^1.2.1",
+    "fastify-secure-session": "github:akrawchyk/fastify-secure-session#salt-option",
     "fastify-sensible": "^0.2.0"
   },
   "devDependencies": {

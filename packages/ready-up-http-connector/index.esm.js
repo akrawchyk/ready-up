@@ -2,41 +2,43 @@ import Request from 'superagent'
 
 function readyUpHTTPConnector(sdk, opts) {
   const API_URL = opts.apiURL || 'https://localhost:3000'
+  const agent = Request.agent()
 
   const httpInterface = {
     async createSession ({ userDisplayName, userPassword }) {
-      return await Request.post(`${API_URL}/sessions`)
+      return await agent.post(`${API_URL}/sessions`)
         .send({ userDisplayName, userPassword })
         .set('accept', 'json')
     },
 
     async createUser ({ displayName, password }) {
-      return await Request.post(`${API_URL}/users`)
+      return await agent.post(`${API_URL}/users`)
         .send({ displayName, password })
         .set('accept', 'json')
     },
 
     async getUser ({ id }) {
-      return await Request.get(`${API_URL}/users/${id}`)
+      return await agent.get(`${API_URL}/users/${id}`)
         .set('accept', 'json')
     },
 
     async createLobby ({ createdByUserId, displayName }) {
-      return await Request.post(`${API_URL}/lobbies`)
+      return await agent.post(`${API_URL}/lobbies`)
         .send({
           createdByUserId,
           displayName
         })
+        .withCredentials()
         .set('accept', 'json')
     },
 
     async getLobby ({ id }) {
-      return Request.get(`${API_URL}/lobbies/${id}`)
+      return agent.get(`${API_URL}/lobbies/${id}`)
         .set('accept', 'json')
     },
 
     async createLobbyMember ({ lobbyId, userId }) {
-      return await Request.post(`${API_URL}/lobbyMembers`)
+      return await agent.post(`${API_URL}/lobbyMembers`)
         .send({
           lobbyId,
           userId
@@ -45,7 +47,7 @@ function readyUpHTTPConnector(sdk, opts) {
     },
 
     async getLobbyMember ({ id }) {
-      return await Request.get(`${API_URL}/lobbyMembers/${id}`)
+      return await agent.get(`${API_URL}/lobbyMembers/${id}`)
         .set('accept', 'json')
     }
   }

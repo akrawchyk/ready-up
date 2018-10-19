@@ -42,6 +42,10 @@ function lobbyRoutes (fastify, opts, next) {
         return error
       }
 
+      // TODO require session
+      const sessionId = request.session.get('sessionId')
+      console.log(sessionId)
+
       const newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
       reply.code(201)
       return newLobby
