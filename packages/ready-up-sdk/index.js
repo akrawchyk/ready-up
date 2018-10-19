@@ -4,9 +4,16 @@ class NotImplementedError extends Error {
   }
 }
 
+class NotAuthorizedError extends Error {
+  constructor() {
+    super('Not Authorized')
+  }
+}
+
 const abstractInterface = {
   // BaseModel: {}, // for pg-connector only so far
 
+  async createSession () { return Promise.reject(new NotImplementedError()) },
   async createUser () { return Promise.reject(new NotImplementedError()) },
   async getUser () { return Promise.reject(new NotImplementedError()) },
   async createLobby () { return Promise.reject(new NotImplementedError()) },
@@ -19,3 +26,4 @@ const abstractInterface = {
 
 module.exports = abstractInterface
 module.exports.NotImplementedError = NotImplementedError
+module.exports.NotAuthorizedError = NotAuthorizedError

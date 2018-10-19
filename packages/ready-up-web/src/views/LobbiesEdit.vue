@@ -12,8 +12,10 @@
       <!--     id="displayName" -->
       <!--     type="text"> -->
       <!-- </fieldset> -->
+      <label for="lobbiesEditSubmit">Create new lobby</label>
       <button
         class="btn btn-primary"
+        id="lobbiesEditSubmit"
         type="submit"
         :disabled="inProgress">
         Submit
@@ -41,7 +43,12 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.currentUser,
+      user: state => {
+        return {
+          id: state.currentSession.userId,
+          displayName: state.currentSession.displayName
+        }
+      },
       lobby: state => state.currentLobby
     }),
     lobbyParams () {
@@ -73,6 +80,7 @@ export default {
           }
         })
       } catch (error) {
+        console.log(error)
         this.setError(error)
       }
     }

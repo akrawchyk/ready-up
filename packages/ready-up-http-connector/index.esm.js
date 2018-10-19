@@ -4,9 +4,15 @@ function readyUpHTTPConnector(sdk, opts) {
   const API_URL = opts.apiURL || 'https://localhost:3000'
 
   const httpInterface = {
-    async createUser ({ displayName }) {
+    async createSession ({ userDisplayName, userPassword }) {
+      return await Request.post(`${API_URL}/sessions`)
+        .send({ userDisplayName, userPassword })
+        .set('accept', 'json')
+    },
+
+    async createUser ({ displayName, password }) {
       return await Request.post(`${API_URL}/users`)
-        .send({ displayName })
+        .send({ displayName, password })
         .set('accept', 'json')
     },
 

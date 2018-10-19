@@ -35,7 +35,7 @@ function lobbyMemberRoutes (fastify, opts, next) {
         let error
         if (!lobbyId) error = new fastify.InvalidParametersError('lobbyId')
         if (!userId) error = new fastify.InvalidParametersError('userId')
-        reply.code(422)
+        reply.code(400)
         return error
       }
 

@@ -8,6 +8,10 @@ function userRoutes (fastify, opts, next) {
             displayName: {
               type: 'string',
               minLength: 1
+            },
+            password: {
+              type: 'string',
+              minLength: 8
             }
           }
         },
@@ -23,15 +27,15 @@ function userRoutes (fastify, opts, next) {
       }
     },
     async function createUser (request, reply) {
-      const { displayName } = request.body
+      const { displayName, password } = request.body
 
       if (!displayName) {
         const error = new fastify.InvalidParametersError('displayName')
-        reply.code(422)
+        reply.code(400)
         return error
       }
 
-      const newUser = await fastify.ReadyUp.createUser({ displayName })
+      const newUser = await fastify.ReadyUp.createUser({ displayName, password })
       reply.code(201)
       return newUser
     }

@@ -1,14 +1,27 @@
+class NotImplementedError extends Error {
+  constructor() {
+    if (typeof Error.captureStackTrace === 'function') {
+    Error.captureStackTrace(this, NotImplementedError);
+    }
+    super('Not Implemented')
+  }
+}
+
 const abstractInterface = {
   // BaseModel: {}, // for pg-connector only so far
 
-  async createUser () { return Promise.reject('not implemented') },
-  async getUser () { return Promise.reject('not implemented') },
-  async createLobby () { return Promise.reject('not implemented') },
-  async getLobby () { return Promise.reject('not implemented') },
-  async createLobbyMember () { return Promise.reject('not implemented') },
-  async getLobbyMember () { return Promise.reject('not implemented') },
-  async createNotification () { return Promise.reject('not implemented') },
-  async getNotification () { return Promise.reject('not implemented') },
+  async createSession () { return Promise.reject(new NotImplementedError()) },
+  async createUser () { return Promise.reject(new NotImplementedError()) },
+  async getUser () { return Promise.reject(new NotImplementedError()) },
+  async createLobby () { return Promise.reject(new NotImplementedError()) },
+  async getLobby () { return Promise.reject(new NotImplementedError()) },
+  async createLobbyMember () { return Promise.reject(new NotImplementedError()) },
+  async getLobbyMember () { return Promise.reject(new NotImplementedError()) },
+  async createNotification () { return Promise.reject(new NotImplementedError()) },
+  async getNotification () { return Promise.reject(new NotImplementedError()) },
 }
 
 export default abstractInterface
+export {
+  NotImplementedError
+}

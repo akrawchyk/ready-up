@@ -19,6 +19,7 @@ fastify.register(require('./users'))
 fastify.register(require('./lobbies'))
 fastify.register(require('./lobbyMembers'))
 fastify.register(require('./notifications'))
+fastify.register(require('./sessions'))
 
 const listen = async () => {
   try {

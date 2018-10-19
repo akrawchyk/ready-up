@@ -10,14 +10,18 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentUser: null,
+    currentSession: null,
+    // currentUser: null,
     viewingUser: null,
     currentLobby: null
   },
   mutations: {
-    setCurrentUser(state, user) {
-      state.currentUser = user
+    setCurrentSession(state, session) {
+      state.currentSession = session
     },
+    // setCurrentUser(state, user) {
+    //   state.currentUser = user
+    // },
     setViewingUser(state, viewingUser) {
       state.viewingUser = viewingUser
     },
@@ -26,10 +30,18 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async createSession ({ dispatch, commit }, sessionParams) {
+      try {
+        const newSession = await readyUpSDK.createSession(sessionParams)
+        commit('setCurrentSession', newSession.body)
+      } catch (err) {
+        throw err
+      }
+    },
     async createUser ({ dispatch, commit }, userParams) {
       try {
-        const newUser = await readyUpSDK.createUser(userParams)
-        commit('setCurrentUser', newUser.body)
+        await readyUpSDK.createUser(userParams)
+        // commit('setCurrentUser', newUser.body)
       } catch (err) {
         throw err
       }

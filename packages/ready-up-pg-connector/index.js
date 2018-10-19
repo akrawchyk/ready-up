@@ -1,5 +1,7 @@
 const Knex = require('knex')
 const { transaction } = require('objection')
+const argon2 = require('@phc/argon2')
+const { NotAuthorizedError } = require('ready-up-sdk')
 const {
   BaseModel,
   User,
@@ -10,13 +12,39 @@ const {
 const pgInterface = {
   BaseModel,
 
-  async createUser ({ displayName }) {
+  async createSession ({ userDisplayName, userPassword }) {
+    try {
+      const user = await User.query()
+        .findOne({ displayName: userDisplayName })
+        .throwIfNotFound()
+
+      const match = await argon2.verify(user.hashedPassword, userPassword)
+
+      if (match) {
+        // TODO create new session
+        return {
+          userId: user.id,
+          userDisplayName: user.displayName
+        }
+      } else {
+        throw new NotAuthorizedError()
+      }
+    } catch (err) {
+      throw err
+    }
+  },
+
+  async createUser ({ displayName, password }) {
+    const hashedPassword = await argon2.hash(password)
+
     return await User.query()
-      .insert({ displayName })
+      .returning(User.visibleFields)
+      .insert({ displayName, hashedPassword })
   },
 
   async getUser ({ id }) {
     return await User.query()
+      .returning(User.visibleFields)
       .findById(id)
       .throwIfNotFound()
   },
@@ -29,7 +57,7 @@ const pgInterface = {
       trx = await transaction.start(knex)
 
       // FIXME query friends
-      // FIXME query allowed permission
+      // FIXME query user allowed permission
       const invitees = await User.query()
         .whereNot({ id: createdByUserId })
         .limit(4)

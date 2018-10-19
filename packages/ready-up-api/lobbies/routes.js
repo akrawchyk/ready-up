@@ -38,7 +38,7 @@ function lobbyRoutes (fastify, opts, next) {
 
       if (!createdByUserId) {
         const error = new fastify.InvalidParametersError('createdByUserId')
-        reply.code(422)
+        reply.code(400)
         return error
       }
 

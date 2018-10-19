@@ -7,7 +7,8 @@ const formUtilsMixin = {
 
     setError (error) {
       this.inProgress = false
-      this.errors = [error.message]
+      const message = error.message || 'An unknown error occurred.'
+      this.errors = [message]
     },
 
     reset () {

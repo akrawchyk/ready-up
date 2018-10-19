@@ -1,5 +1,6 @@
 <template>
-  <div id="usersEdit">
+  <div class="login">
+    <h1>Login</h1>
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
       <fieldset
@@ -7,13 +8,13 @@
         :disabled="inProgress">
         <label for="displayName">Display Name</label>
         <input
-          v-model="creatingUser.displayName"
+          v-model="user.displayName"
           class="form-control"
           id="displayName"
           type="text">
         <label for="password">Password</label>
         <input
-          v-model="creatingUser.password"
+          v-model="user.password"
           class="form-control"
           id="password"
           type="password">
@@ -34,45 +35,39 @@ import { formUtilsMixin } from '@/mixins'
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'UsersEdit',
+  name: 'Home',
   components: {
     ErrorList
   },
-  mixins: [formUtilsMixin],
+  mixins: [ formUtilsMixin ],
   data () {
     return {
-      creatingUser: {},
+      user: {},
       inProgress: false,
       errors: []
     }
   },
   computed: {
-    userParams () {
+    sessionParams () {
       return {
-        displayName: this.creatingUser.displayName,
-        password: this.creatingUser.password
+        userDisplayName: this.user.displayName,
+        userPassword: this.user.password
       }
     }
   },
   methods: {
     ...mapActions([
-      'createUser'
+      'createSession'
     ]),
 
     async onSubmit () {
-      // TODO
-      // ;(this.multiLot.id
-      //   ? this.editMultiLot(id, article)
-      //   : this.createMultiLot(article))
-
       this.setProgress()
 
       try {
-        await this.createUser(this.userParams)
+        await this.createSession(this.sessionParams)
         this.reset()
-        this.creatingUser = {}
         this.$router.push({
-          name: 'login'
+          name: 'lobbiesCreate'
         })
       } catch (error) {
         this.setError(error)

@@ -9,6 +9,7 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
+    "@phc/argon2": "^1.0.9",
     "knex": "^0.15.2",
     "objection": "^1.3.0",
     "pg": "^7.5.0"
