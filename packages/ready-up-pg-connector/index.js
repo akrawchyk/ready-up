@@ -13,24 +13,20 @@ const pgInterface = {
   BaseModel,
 
   async createSession ({ userDisplayName, userPassword }) {
-    try {
-      const user = await User.query()
-        .findOne({ displayName: userDisplayName })
-        .throwIfNotFound()
+    const user = await User.query()
+      .findOne({ displayName: userDisplayName })
+      .throwIfNotFound()
 
-      const match = await argon2.verify(user.hashedPassword, userPassword)
+    const match = await argon2.verify(user.hashedPassword, userPassword)
 
-      if (match) {
-        // TODO create new session
-        return {
-          userId: user.id,
-          userDisplayName: user.displayName
-        }
-      } else {
-        throw new NotAuthorizedError()
+    if (match) {
+      // TODO create new session
+      return {
+        userId: user.id,
+        userDisplayName: user.displayName
       }
-    } catch (err) {
-      throw err
+    } else {
+      throw new NotAuthorizedError()
     }
   },
 
@@ -56,10 +52,10 @@ const pgInterface = {
     try {
       trx = await transaction.start(knex)
 
-      // FIXME query friends
-      // FIXME query user allowed permission
       const invitees = await User.query()
         .whereNot({ id: createdByUserId })
+        // FIXME query friends
+        // FIXME query user allowed permission
         .limit(4)
         .pluck('id')
         .then(userIds => userIds.map(id => {

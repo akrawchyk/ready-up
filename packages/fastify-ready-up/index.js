@@ -24,13 +24,13 @@ function fastifyReadyUp (fastify, opts, next) {
     err = wrapError(err)
     const retError = new Error()
 
-    if (err instanceof ReadyUpSDK.NotAuthorizedError) {
-      reply.code(401)
-      retError.message = 'Not Authorized'
-      return retError
-    } else if (err instanceof ValidationError) {
+    if (err instanceof ValidationError) {
       reply.code(400)
       retError.message = 'Bad Request'
+      return retError
+    } else if (err instanceof ReadyUpSDK.NotAuthorizedError) {
+      reply.code(401)
+      retError.message = 'Not Authorized'
       return retError
     } else if (err instanceof NotFoundError) {
       reply.code(404)
