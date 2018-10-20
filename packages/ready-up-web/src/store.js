@@ -15,6 +15,23 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging()
 messaging.usePublicVapidKey(process.env.VUE_APP_FIREBASE_PUBLIC_VAPID_KEY)
+messaging.onTokenRefresh(async () => {
+  try {
+    const refreshedToken = await messaging.getToken()
+    console.log('Token refreshed.');
+    // Indicate that the new Instance ID token has not yet been sent to the
+    // app server.
+    // setTokenSentToServer(false);
+    // Send Instance ID token to app server.
+    await readyUpSDK.updateUser({
+      id: state.currentSession.userId,
+      firebaseMessagingToken: currentToken
+    })
+  } catch (err) {
+    console.log('Unable to retrieve refreshed token ', err)
+    // showToken('Unable to retrieve refreshed token ', err);
+  }
+})
 
 Vue.use(Vuex)
 
@@ -64,6 +81,16 @@ export default new Vuex.Store({
         throw err
       }
     },
+    async updateUser ({ state, dispatch, commit }, { firebaseMessagingToken }) {
+      try {
+        return await readyUpSDK.updateUser({
+          id: state.currentSession.userId,
+          firebaseMessagingToken
+        })
+      } catch (err) {
+        throw err
+      }
+    },
     async getUser ({ dispatch, commit }, userQuery) {
       try {
         const viewingUser = await readyUpSDK.getUser(userQuery)
@@ -80,18 +107,23 @@ export default new Vuex.Store({
         throw err
       }
     },
+
+    // firebase below
+
     async requestNotificationPermission ({ state, dispatch, commit }) {
       try {
-        console.log('requesting permission')
         await messaging.requestPermission()
+      } catch (err) {
+        console.log('Unable to get permission to notify.', err)
+        dispatch('updateUser', { firebaseMessagingToken: '' })
+        throw err
+      }
+
+      try {
         const currentToken = await messaging.getToken()
 
         if (currentToken) {
-          console.log(currentToken)
-          await readyUpSDK.updateUser({
-            id: state.currentSession.userId,
-            firebaseMessagingToken: currentToken
-          })
+          dispatch('updateUser', { firebaseMessagingToken: currentToken })
           // updateUIForPushEnabled(currentToken);
         } else {
           // Show permission request.
@@ -99,9 +131,9 @@ export default new Vuex.Store({
           // // Show permission UI.
           // updateUIForPushPermissionRequired()
           // setTokenSentToServer(false)
+          dispatch('updateUser', { firebaseMessagingToken: '' })
         }
       } catch (err) {
-        console.log('Unable to get permission to notify.', err)
         throw err
       }
     }

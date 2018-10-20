@@ -56,11 +56,12 @@ function userRoutes (fastify, opts, next) {
       ])
     },
     async function updateUser (request, reply) {
-      const { firebaseMessagingToken } = request.body
+      let { firebaseMessagingToken } = request.body
 
       if (!firebaseMessagingToken) {
-        reply.code(400)
-        return new new fastify.InvalidParametersError('firebaseMessagingToken')
+        firebaseMessagingToken = ''
+        // reply.code(400)
+        // return new new fastify.InvalidParametersError('firebaseMessagingToken')
       }
 
       const userId = request.userSession.userId
