@@ -1,9 +1,7 @@
-const { pgConnectionString } = require('ready-up-options')
-
 module.exports = {
   development: {
     client: 'postgresql',
-    connection: pgConnectionString,
+    connection: 'postgresql://postgres@localhost/ready-up',
     migrations: {
       tableName: 'readyUpMigrations'
     }

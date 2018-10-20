@@ -73,6 +73,7 @@ export default {
       try {
         await this.createLobby(this.lobbyParams)
         this.reset()
+
         this.$router.push({
           name: 'lobbiesShow',
           params: {

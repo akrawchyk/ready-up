@@ -24,6 +24,13 @@ function readyUpHTTPConnector(sdk, opts) {
         .set('accept', 'json')
     },
 
+    async updateUser ({ id, firebaseMessagingToken }) {
+      return await agent.patch(`${API_URL}/users/${id}`)
+        .send({ firebaseMessagingToken })
+        .withCredentials()
+        .set('accept', 'json')
+    },
+
     async getUser ({ id }) {
       return await agent.get(`${API_URL}/users/${id}`)
         .set('accept', 'json')

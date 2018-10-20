@@ -16,6 +16,7 @@ const abstractInterface = {
   async createSession () { return Promise.reject(new NotImplementedError()) },
   async getSession () { return Promise.reject(new NotImplementedError()) },
   async createUser () { return Promise.reject(new NotImplementedError()) },
+  async updateUser () { return Promise.reject(new NotImplementedError()) },
   async getUser () { return Promise.reject(new NotImplementedError()) },
   async createLobby () { return Promise.reject(new NotImplementedError()) },
   async getLobby () { return Promise.reject(new NotImplementedError()) },

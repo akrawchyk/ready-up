@@ -44,6 +44,32 @@ function userRoutes (fastify, opts, next) {
     }
   )
 
+  fastify.patch('/users/:userId',
+    {
+      schema: {
+        params: {
+          firebaseMessagingToken: { type: 'string' }
+        }
+      },
+      beforeHandler: fastify.auth([
+        fastify.verifyUserSession
+      ])
+    },
+    async function updateUser (request, reply) {
+      const { firebaseMessagingToken } = request.body
+
+      if (!firebaseMessagingToken) {
+        reply.code(400)
+        return new new fastify.InvalidParametersError('firebaseMessagingToken')
+      }
+
+      const userId = request.userSession.userId
+      await fastify.readyUp.updateUser({ id: userId, firebaseMessagingToken })
+      reply.code(204)
+      return
+    }
+  )
+
   fastify.get('/users/:userId',
     {
       schema: {

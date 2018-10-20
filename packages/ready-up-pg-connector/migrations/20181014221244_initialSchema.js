@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
       table.string('displayName').notNullable()
       table.unique('displayName')
       table.string('hashedPassword').notNullable()
+      table.string('firebaseMessagingToken')
       table.timestamp('createdAt', 6).defaultTo(knex.fn.now(6)).notNullable()
       table.timestamp('updatedAt', 6)
     })

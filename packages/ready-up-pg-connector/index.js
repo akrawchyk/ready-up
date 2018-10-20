@@ -66,6 +66,13 @@ const pgInterface = {
       .insert({ displayName, hashedPassword })
   },
 
+  async updateUser ({ id, firebaseMessagingToken }) {
+    return await User.query()
+      .where({ id })
+      .update({ firebaseMessagingToken }, User.visibleFields)
+      .throwIfNotFound()
+  },
+
   async getUser ({ id }) {
     return await User.query()
       .returning(User.visibleFields)
