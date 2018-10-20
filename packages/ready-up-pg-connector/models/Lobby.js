@@ -7,7 +7,7 @@ class Lobby extends Model {
 
   static get relationMappings() {
     return {
-      user: {
+      creator: {
         relation: Model.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {

@@ -32,6 +32,10 @@ messaging.onTokenRefresh(async () => {
     // showToken('Unable to retrieve refreshed token ', err);
   }
 })
+messaging.onMessage(function (payload) {
+  // TODO receive a message
+  console.log('Message received: ', payload)
+})
 
 Vue.use(Vuex)
 

@@ -83,6 +83,8 @@ const pgInterface = {
   async createLobby ({ createdByUserId, displayName }) {
     const knex = Notification.knex()
     let trx
+    let newLobby
+    let notifications
 
     try {
       trx = await transaction.start(knex)
@@ -101,7 +103,7 @@ const pgInterface = {
           }
         }))
 
-      const newLobby = await Lobby.query()
+      newLobby = await Lobby.query()
         .insertGraphAndFetch([{
           '#id': 'newLobby',
           createdByUserId,
@@ -113,7 +115,8 @@ const pgInterface = {
       const recipients = newLobby.lobbyMembers
         .filter(lobbyMember => lobbyMember.id !== createdByUserId)
 
-      const notifications = await Notification.query()
+      notifications = await Notification.query()
+        .eager('recipient')
         .insert(recipients.map(lobbyMember => {
           return {
             recipientUserId: lobbyMember.userId,
@@ -121,14 +124,32 @@ const pgInterface = {
           }
         }))
 
-      // TODO send notification
-
       await trx.commit()
-      return newLobby
     } catch (err) {
       await trx.rollback()
       throw err
     }
+
+    // FIXME move to background job that looks for notification records that are not "sent"
+    notifications
+      .map(notification => notification.recipient)
+      .map(async (recipient) => {
+        const message = {
+          data: {
+            message: JSON.stringify(newLobby)
+          },
+          token: recipient.firebaseMessagingToken
+        }
+
+        try {
+          const response = await admin.messaging().send(message)
+          console.log('Successfully sent message: ', response)
+        } catch (err) {
+          console.log('Error sending message:', err);
+        }
+      })
+
+    return newLobby
   },
 
   async getLobby ({ id }) {

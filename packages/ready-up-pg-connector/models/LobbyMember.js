@@ -15,7 +15,7 @@ class LobbyMember extends Model {
           to: 'users.id'
         }
       },
-      user: {
+      creator: {
         relation: Model.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {

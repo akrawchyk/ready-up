@@ -7,7 +7,7 @@ class Notification extends Model {
 
   static get relationMappings() {
     return {
-      user: {
+      creator: {
         relation: Model.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {
@@ -15,7 +15,7 @@ class Notification extends Model {
           to: 'users.id'
         }
       },
-      user: {
+      recipient: {
         relation: Model.BelongsToOneRelation,
         modelClass: `${__dirname}/User`,
         join: {

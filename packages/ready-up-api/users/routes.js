@@ -60,8 +60,6 @@ function userRoutes (fastify, opts, next) {
 
       if (!firebaseMessagingToken) {
         firebaseMessagingToken = ''
-        // reply.code(400)
-        // return new new fastify.InvalidParametersError('firebaseMessagingToken')
       }
 
       const userId = request.userSession.userId
