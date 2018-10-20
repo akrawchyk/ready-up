@@ -8,7 +8,6 @@ const fastify = require('fastify')({
     cert: readFileSync(join(__dirname, 'server.crt'))
   }
 })
-const { httpPort } = require('ready-up-options')
 
 fastify.register(require('fastify-cors'), {
   origin: ['https://localhost:8080'],
@@ -40,7 +39,7 @@ const listen = async () => {
       }
     })
 
-    const address = await fastify.listen(httpPort, '0.0.0.0')
+    const address = await fastify.listen(3000, '0.0.0.0')
     fastify.log.info(`server listening on ${address}`)
   } catch (err) {
     fastify.log.error(err)

@@ -9,11 +9,10 @@ const {
   ForeignKeyViolationError } = require('objection-db-errors')
 const pgConnector = require('ready-up-pg-connector')
 const ReadyUpSDK = require('ready-up-sdk')
-const { pgConnectionString } = require('ready-up-options')
 
 function fastifyReadyUp (fastify, opts, next) {
   try {
-    readyUpSDK = pgConnector(ReadyUpSDK, { pgConnectionString })
+    readyUpSDK = pgConnector(ReadyUpSDK, { pgConnectionString: 'postgresql://postgres@localhost/ready-up' })
   } catch (err) {
     next(err)
     return

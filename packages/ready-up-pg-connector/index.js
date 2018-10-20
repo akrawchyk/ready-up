@@ -1,6 +1,7 @@
 const Knex = require('knex')
 const { transaction } = require('objection')
 const argon2 = require('@phc/argon2')
+const admin = require('firebase-admin')
 const { NotAuthorizedError } = require('ready-up-sdk')
 const {
   BaseModel,
@@ -9,6 +10,12 @@ const {
   LobbyMember,
   Notification,
   Session } = require('./models')
+const serviceAccount = require('./ready-up-f1555-firebase-adminsdk-wxb67-632d601424.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  messagingSenderId: '751484056905'
+})
 
 const pgInterface = {
   BaseModel,
@@ -96,16 +103,16 @@ const pgInterface = {
         }])
         .then(graph => graph[0])
 
-      await Notification.query()
-        .insert(newLobby.lobbyMembers
-          .filter(lobbyMember => lobbyMember.id !== createdByUserId)
-          .map(lobbyMember => {
-            return {
-              recipientUserId: lobbyMember.userId,
-              createdByUserId
-            }
-          })
-        )
+      const recipients = newLobby.lobbyMembers
+        .filter(lobbyMember => lobbyMember.id !== createdByUserId)
+
+      const notifications = await Notification.query()
+        .insert(recipients.map(lobbyMember => {
+          return {
+            recipientUserId: lobbyMember.userId,
+            createdByUserId
+          }
+        }))
 
       // TODO send notification
 
