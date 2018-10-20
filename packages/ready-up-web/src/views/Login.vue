@@ -32,7 +32,7 @@
 <script>
 import ErrorList from '@/components/ErrorList'
 import { formUtilsMixin } from '@/mixins'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -48,6 +48,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      session: state => state.currentSession
+    }),
     sessionParams () {
       return {
         userDisplayName: this.user.displayName,
@@ -57,7 +60,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'createSession'
+      'createSession',
+      'getSession'
     ]),
 
     async onSubmit () {
@@ -65,6 +69,7 @@ export default {
 
       try {
         await this.createSession(this.sessionParams)
+
         this.reset()
         this.$router.push({
           name: 'lobbiesCreate'
@@ -72,6 +77,21 @@ export default {
       } catch (error) {
         this.setError(error)
       }
+    }
+  },
+  created: async function() {
+    this.setProgress()
+
+    try {
+      await this.getSession()
+
+      if (this.session) {
+        this.$router.push({
+          name: 'lobbiesCreate'
+        })
+      }
+    } catch (err) {
+      this.reset()
     }
   }
 }

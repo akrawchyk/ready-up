@@ -19,7 +19,23 @@ function fastifyReadyUp (fastify, opts, next) {
     return
   }
 
-  fastify.decorate('ReadyUp', readyUpSDK)
+  fastify.decorate('readyUp', readyUpSDK)
+  fastify.decorateRequest('userSession', null)
+  fastify.decorate('verifyUserSession', async function(request, reply, done) {
+    try {
+      const sessionId = request.session.get('sessionId')
+      if (!sessionId) {
+        throw new Error('No sessionId found')
+      }
+
+      const userSession = await readyUpSDK.getSession({ id: sessionId })
+      request.userSession = userSession
+
+      done()
+    } catch (err) {
+      done(new ReadyUpSDK.NotAuthorizedError())
+    }
+  })
   fastify.setErrorHandler(async function (err, request, reply) {
     err = wrapError(err)
     const retError = new Error()

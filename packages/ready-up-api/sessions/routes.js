@@ -11,9 +11,10 @@ function sessionRoutes (fastify, opts, next) {
             },
             userPassword: {
               type: 'string',
-              minLength: 8
+              minLength: 10
             }
-          }
+          },
+          // required: ['userDisplayName', 'userPassword']
         },
         response: {
           201: {
@@ -29,16 +30,40 @@ function sessionRoutes (fastify, opts, next) {
     async function createSession (request, reply) {
       const { userDisplayName, userPassword } = request.body
 
-      if (!userDisplayName) {
-        const error = new fastify.InvalidParametersError('userDisplayName')
+      if (!userDisplayName || !userPassword) {
+        let error
+        if (!userDisplayName) error = new fastify.InvalidParametersError('userDisplayName')
+        if (!userPassword) error = new fastify.InvalidParametersError('userPassword')
         reply.code(400)
         return error
       }
 
-      const newSession = await fastify.ReadyUp.createSession({ userDisplayName, userPassword })
+      const newSession = await fastify.readyUp.createSession({ userDisplayName, userPassword })
       request.session.set('sessionId', newSession.id)
       reply.code(201)
       return newSession
+    }
+  ),
+
+  fastify.get('/sessions',
+    {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              userId: { type: 'string' },
+              userDisplayName: { type: 'string' }
+            }
+          }
+        }
+      },
+      beforeHandler: fastify.auth([
+        fastify.verifyUserSession
+      ])
+    },
+    async function getSession (request, reply) {
+      return request.userSession
     }
   )
 

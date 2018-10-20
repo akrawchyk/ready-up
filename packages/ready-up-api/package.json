@@ -11,6 +11,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "fastify": "^1.12.1",
+    "fastify-auth": "^0.3.0",
     "fastify-cookie": "^2.0.2",
     "fastify-cors": "^0.1.0",
     "fastify-plugin": "^1.2.1",

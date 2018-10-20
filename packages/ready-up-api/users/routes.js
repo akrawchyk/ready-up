@@ -11,9 +11,10 @@ function userRoutes (fastify, opts, next) {
             },
             password: {
               type: 'string',
-              minLength: 8
+              minLength: 10
             }
           }
+          // required: ['displayName', 'password']
         },
         response: {
           201: {
@@ -29,13 +30,15 @@ function userRoutes (fastify, opts, next) {
     async function createUser (request, reply) {
       const { displayName, password } = request.body
 
-      if (!displayName) {
-        const error = new fastify.InvalidParametersError('displayName')
+      if (!displayName || !password) {
+        let error
+        if (!displayName) error = new fastify.InvalidParametersError('displayName')
+        if (!password) error = new fastify.InvalidParametersError('password')
         reply.code(400)
         return error
       }
 
-      const newUser = await fastify.ReadyUp.createUser({ displayName, password })
+      const newUser = await fastify.readyUp.createUser({ displayName, password })
       reply.code(201)
       return newUser
     }
@@ -60,7 +63,7 @@ function userRoutes (fastify, opts, next) {
     },
     async function getUser (request, reply) {
       const { userId } = request.params
-      const user = await fastify.ReadyUp.getUser({ id: userId })
+      const user = await fastify.readyUp.getUser({ id: userId })
       return user
     }
   )

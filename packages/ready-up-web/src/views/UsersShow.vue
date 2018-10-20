@@ -38,19 +38,14 @@ export default {
     ...mapActions([
       'getUser'
     ]),
-
-    async onGet () {
-      try {
-        await this.getUser(this.userQuery)
-      } catch (error) {
-        console.log(error)
-        this.setError(error)
-      }
-    }
   },
 
-  mounted: function () {
-    this.onGet()
+  mounted: async function () {
+    try {
+      await this.getUser(this.userQuery)
+    } catch (error) {
+      this.setError(error)
+    }
   }
 }
 </script>

@@ -5,11 +5,7 @@ function lobbyRoutes (fastify, opts, next) {
         body: {
           type: 'object',
           properties: {
-            displayName: { type: 'string' },
-            createdByUserId: {
-              type: 'number',
-              minimum: 1
-            }
+            displayName: { type: 'string' }
           }
         },
         response: {
@@ -18,7 +14,6 @@ function lobbyRoutes (fastify, opts, next) {
             properties: {
               id: { type: 'number' },
               displayName: { type: 'string' },
-              createdByUserId: { type: 'number' },
               lobbyMembers: {
                 type: 'array',
                 items: {
@@ -31,22 +26,15 @@ function lobbyRoutes (fastify, opts, next) {
             }
           }
         }
-      }
+      },
+      beforeHandler: fastify.auth([
+        fastify.verifyUserSession
+      ])
     },
     async function createLobby (request, reply) {
-      const { displayName, createdByUserId } = request.body
-
-      if (!createdByUserId) {
-        const error = new fastify.InvalidParametersError('createdByUserId')
-        reply.code(400)
-        return error
-      }
-
-      // TODO require session
-      const sessionId = request.session.get('sessionId')
-      console.log(sessionId)
-
-      const newLobby = await fastify.ReadyUp.createLobby({ createdByUserId, displayName })
+      const { displayName } = request.body
+      const createdByUserId = request.userSession.userId
+      const newLobby = await fastify.readyUp.createLobby({ createdByUserId, displayName })
       reply.code(201)
       return newLobby
     }
@@ -80,7 +68,7 @@ function lobbyRoutes (fastify, opts, next) {
     },
     async function getLobby (request, reply) {
       const { lobbyId } = request.params
-      const lobby = await fastify.ReadyUp.getLobby({ id: lobbyId })
+      const lobby = await fastify.readyUp.getLobby({ id: lobbyId })
       return lobby
     }
   )

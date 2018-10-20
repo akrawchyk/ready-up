@@ -7,7 +7,8 @@ const {
   User,
   Lobby,
   LobbyMember,
-  Notification } = require('./models')
+  Notification,
+  Session } = require('./models')
 
 const pgInterface = {
   BaseModel,
@@ -18,17 +19,36 @@ const pgInterface = {
       .throwIfNotFound()
 
     const match = await argon2.verify(user.hashedPassword, userPassword)
+    if (!match) throw new NotAuthorizedError()
 
-    if (match) {
-      // TODO create new session
-      return {
-        id: 109, // sessionId
-        userId: user.id,
-        userDisplayName: user.displayName
-      }
-    } else {
-      throw new NotAuthorizedError()
+    // TODO find fresh cached session if exists
+
+    const session = await Session.query()
+      .insert({ userId: user.id })
+
+    return {
+      id: session.id,
+      userId: user.id,
+      userDisplayName: user.displayName
     }
+  },
+
+  async getSession ({ id }) {
+    const currentTime = new Date()
+    const maxSessionTime = 1000 * 60 * 20 // 20 minutes
+    const cutoffTime = new Date(currentTime - maxSessionTime).toISOString()
+
+    return await Session.query()
+      .eager('user')
+      .findOne({ id })
+      .andWhere('createdAt', '>', cutoffTime)
+      .throwIfNotFound()
+      .then(session => {
+        return {
+          userId: session.user.id,
+          userDisplayName: session.user.displayName
+        }
+      })
   },
 
   async createUser ({ displayName, password }) {
@@ -62,7 +82,8 @@ const pgInterface = {
         .then(userIds => userIds.map(id => {
           return {
             userId: id,
-            lobbyId: "#ref{newLobby.id}"
+            lobbyId: "#ref{newLobby.id}",
+            createdByUserId
           }
         }))
 

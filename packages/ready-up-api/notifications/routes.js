@@ -22,18 +22,15 @@ function notificationRoutes (fastify, opts, next) {
             }
           }
         }
-      }
+      },
+      beforeHandler: fastify.auth([
+        fastify.verifyUserSession
+      ])
     },
     async function createNotification (request, reply) {
-      const { createdByUserId, content } = request.body
-
-      if (!createdByUserId) {
-        const error = new fastify.InvalidParametersError('createdByUserId')
-        reply.unprocessableEntity(error.message)
-        return error
-      }
-
-      const newNotification = await fastify.ReadyUp.createNotification({ createdByUserId })
+      const { content } = request.body
+      const createdByUserId = request.userSession.userId
+      const newNotification = await fastify.readyUp.createNotification({ createdByUserId })
       reply.code(201)
       return newNotification
     }
@@ -58,7 +55,7 @@ function notificationRoutes (fastify, opts, next) {
     },
     async function getNotification (request, reply) {
       const { notificationId } = request.params
-      const notification = await fastify.ReadyUp.getNotification({ id: notificationId })
+      const notification = await fastify.readyUp.getNotification({ id: notificationId })
       return notification
     }
   )

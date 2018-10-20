@@ -11,7 +11,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentSession: null,
-    // currentUser: null,
     viewingUser: null,
     currentLobby: null
   },
@@ -19,9 +18,6 @@ export default new Vuex.Store({
     setCurrentSession(state, session) {
       state.currentSession = session
     },
-    // setCurrentUser(state, user) {
-    //   state.currentUser = user
-    // },
     setViewingUser(state, viewingUser) {
       state.viewingUser = viewingUser
     },
@@ -34,6 +30,14 @@ export default new Vuex.Store({
       try {
         const newSession = await readyUpSDK.createSession(sessionParams)
         commit('setCurrentSession', newSession.body)
+      } catch (err) {
+        throw err
+      }
+    },
+    async getSession ({ dispatch, commit }) {
+      try {
+        const session = await readyUpSDK.getSession()
+        commit('setCurrentSession', session.body)
       } catch (err) {
         throw err
       }

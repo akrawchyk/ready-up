@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -29,6 +29,6 @@ export default {
     ...mapState({
       session: state => state.currentSession
     })
-  }
+  },
 }
 </script>

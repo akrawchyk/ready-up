@@ -14,6 +14,7 @@ function lobbyMemberRoutes (fastify, opts, next) {
               minimum: 1
             }
           }
+          // required: ['lobbyId', 'userId']
         },
         response: {
           201: {
@@ -26,7 +27,10 @@ function lobbyMemberRoutes (fastify, opts, next) {
             }
           }
         }
-      }
+      },
+      beforeHandler: fastify.auth([
+        fastify.verifyUserSession
+      ])
     },
     async function createLobbyMember (request, reply) {
       const { lobbyId, userId } = request.body
@@ -39,7 +43,12 @@ function lobbyMemberRoutes (fastify, opts, next) {
         return error
       }
 
-      const newLobbyMember = await fastify.ReadyUp.createLobbyMember({ lobbyId, userId })
+      const createdByUserId = request.userSession.userId
+      const newLobbyMember = await fastify.readyUp.createLobbyMember({
+        lobbyId,
+        userId,
+        createdByUserId
+      })
       reply.code(201)
       return newLobbyMember
     }
@@ -66,7 +75,7 @@ function lobbyMemberRoutes (fastify, opts, next) {
     },
     async function getLobbyMember (request, reply) {
       const { lobbyMemberId } = request.params
-      const lobbyMember = await fastify.ReadyUp.getLobbyMember({ id: lobbyMemberId })
+      const lobbyMember = await fastify.readyUp.getLobbyMember({ id: lobbyMemberId })
       return lobbyMember
     }
   )

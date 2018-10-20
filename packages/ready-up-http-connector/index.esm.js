@@ -8,6 +8,13 @@ function readyUpHTTPConnector(sdk, opts) {
     async createSession ({ userDisplayName, userPassword }) {
       return await agent.post(`${API_URL}/sessions`)
         .send({ userDisplayName, userPassword })
+        .withCredentials()
+        .set('accept', 'json')
+    },
+
+    async getSession () {
+      return await agent.get(`${API_URL}/sessions`)
+        .withCredentials()
         .set('accept', 'json')
     },
 
@@ -34,6 +41,7 @@ function readyUpHTTPConnector(sdk, opts) {
 
     async getLobby ({ id }) {
       return agent.get(`${API_URL}/lobbies/${id}`)
+        .withCredentials()
         .set('accept', 'json')
     },
 
@@ -43,11 +51,13 @@ function readyUpHTTPConnector(sdk, opts) {
           lobbyId,
           userId
         })
+        .withCredentials()
         .set('accept', 'json')
     },
 
     async getLobbyMember ({ id }) {
       return await agent.get(`${API_URL}/lobbyMembers/${id}`)
+        .withCredentials()
         .set('accept', 'json')
     }
   }
