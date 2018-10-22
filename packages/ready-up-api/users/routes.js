@@ -48,6 +48,9 @@ function userRoutes (fastify, opts, next) {
     {
       schema: {
         params: {
+          userId: { type: 'number' }
+        },
+        body: {
           firebaseMessagingToken: { type: 'string' }
         }
       },

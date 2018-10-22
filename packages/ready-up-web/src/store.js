@@ -75,6 +75,16 @@ export default new Vuex.Store({
       } catch (err) {
         throw err
       }
+    },
+    async updateLobbyMember ({ dispatch, commit }, { id, ready }) {
+      try {
+        return await readyUpSDK.updateLobbyMember({
+          id,
+          ready
+        })
+      } catch (err) {
+        throw err
+      }
     }
   }
 })

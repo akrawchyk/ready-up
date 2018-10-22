@@ -66,6 +66,13 @@ function readyUpHTTPConnector(sdk, opts) {
       return await agent.get(`${API_URL}/lobbyMembers/${id}`)
         .withCredentials()
         .set('accept', 'json')
+    },
+
+    async updateLobbyMember ({ id, ready }) {
+      return await agent.patch(`${API_URL}/lobbyMembers/${id}`)
+        .send({ ready })
+        .withCredentials()
+        .set('accept', 'json')
     }
   }
 

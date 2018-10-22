@@ -54,6 +54,28 @@ function lobbyMemberRoutes (fastify, opts, next) {
     }
   )
 
+  fastify.patch('/lobbyMembers/:lobbyMemberId',
+    {
+      schema: {
+        params: {
+          lobbyMemberId: { type: 'number' }
+        },
+        body: {
+          ready: { type: 'boolean' }
+        }
+      }
+    },
+    async function updateLobbyMember (request, reply) {
+      const { lobbyMemberId } = request.params
+      const lobbyMember = await fastify.readyUp.updateLobbyMember({ id:
+        lobbyMemberId,
+        ready
+      })
+      reply.code(204)
+      return
+    }
+  )
+
   fastify.get('/lobbyMembers/:lobbyMemberId',
     {
       schema: {

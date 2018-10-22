@@ -135,9 +135,19 @@ const pgInterface = {
       .map((notification) => {
         // FIXME skip if no recipient token?
         return async function sendNotification () {
+          const title = newLobby.displayName || `New Lobby ${newLobby.id}`
+          const body = `Ready up with ${newLobby.lobbyMembers.length} others!`
           const message = {
             // TODO lobby presenter for notifications (max 4KB)
-            data: { message: JSON.stringify(newLobby) },
+            data: { lobby: JSON.stringify(newLobby) },
+            // https://firebase.google.com/docs/cloud-messaging/admin/send-messages#defining_the_message
+            webpush: {
+              notification: {
+                title,
+                body,
+                icon: 'https://ready-up.test:8000/img/icons/android-chrome-192x192.png'
+              }
+            },
             token: notification.recipient.firebaseMessagingToken
           }
 
@@ -168,6 +178,13 @@ const pgInterface = {
   async createLobbyMember ({ lobbyId, userId }) {
     return await LobbyMember.query()
       .insert({ lobbyId, userId })
+  },
+
+  async updateLobbyMember ({ id, ready }) {
+    return await LobbyMember.query()
+      .where({ id })
+      .patch({ ready })
+      .throwIfNotFound()
   },
 
   async getLobbyMember ({ id }) {

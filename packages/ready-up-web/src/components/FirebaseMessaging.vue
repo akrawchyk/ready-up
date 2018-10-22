@@ -1,5 +1,9 @@
 <template>
   <div id="firebase-messaging">
+    <div v-if="lastMessage">
+      {{ lastMessage.notification }}
+    </div>
+    <p>FirebaseMessaging log</p>
     <code>
       {{ log }}
     </code>
@@ -22,7 +26,10 @@ export default {
   computed: {
     ...mapState({
       session: state => state.currentSession
-    })
+    }),
+    lastMessage () {
+      return this.log[this.log.length - 1]
+    }
   },
   methods: {
     ...mapActions([

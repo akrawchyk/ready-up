@@ -19,6 +19,7 @@ const abstractInterface = {
   async getLobby () { return Promise.reject(new NotImplementedError()) },
   async createLobbyMember () { return Promise.reject(new NotImplementedError()) },
   async getLobbyMember () { return Promise.reject(new NotImplementedError()) },
+  async updateLobbyMember () { return Promise.reject(new NotImplementedError()) },
   async createNotification () { return Promise.reject(new NotImplementedError()) },
   async getNotification () { return Promise.reject(new NotImplementedError()) },
 }
