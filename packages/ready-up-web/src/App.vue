@@ -6,8 +6,21 @@
       <router-link to="/lobbies">Lobbies</router-link>
     </div>
     <router-view/>
+
+    <FirebaseMessaging/>
   </div>
 </template>
+
+<script>
+import FirebaseMessaging from '@/components/FirebaseMessaging'
+
+export default {
+  name: 'App',
+  components: {
+    FirebaseMessaging
+  }
+}
+</script>
 
 <style>
 #app {

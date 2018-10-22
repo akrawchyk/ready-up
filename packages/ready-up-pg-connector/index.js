@@ -69,7 +69,8 @@ const pgInterface = {
   async updateUser ({ id, firebaseMessagingToken }) {
     return await User.query()
       .where({ id })
-      .update({ firebaseMessagingToken }, User.visibleFields)
+      .patch({ firebaseMessagingToken })
+      .returning(User.visibleFields)
       .throwIfNotFound()
   },
 
@@ -90,7 +91,6 @@ const pgInterface = {
       trx = await transaction.start(knex)
 
       const invitees = await User.query()
-        .whereNot({ id: createdByUserId })
         // FIXME query friends
         // FIXME query user allowed permission
         .limit(4)
@@ -113,7 +113,7 @@ const pgInterface = {
         .then(graph => graph[0])
 
       const recipients = newLobby.lobbyMembers
-        .filter(lobbyMember => lobbyMember.id !== createdByUserId)
+        .filter(lobbyMember => lobbyMember.userId !== createdByUserId)
 
       notifications = await Notification.query()
         .eager('recipient')
@@ -131,23 +131,29 @@ const pgInterface = {
     }
 
     // FIXME move to background job that looks for notification records that are not "sent"
-    notifications
-      .map(notification => notification.recipient)
-      .map(async (recipient) => {
-        const message = {
-          data: {
-            message: JSON.stringify(newLobby)
-          },
-          token: recipient.firebaseMessagingToken
-        }
+    const outbox = notifications
+      .map((notification) => {
+        // FIXME skip if no recipient token?
+        return async function sendNotification () {
+          const message = {
+            // TODO lobby presenter for notifications (max 4KB)
+            data: { message: JSON.stringify(newLobby) },
+            token: notification.recipient.firebaseMessagingToken
+          }
 
-        try {
-          const response = await admin.messaging().send(message)
-          console.log('Successfully sent message: ', response)
-        } catch (err) {
-          console.log('Error sending message:', err);
+          try {
+            const response = await admin.messaging()
+              .send(message)
+            console.log('Successfully sent message: ', response)
+            return await notification.$query()
+              .patch({ sent: true })
+          } catch (err) {
+            console.log('Error sending message:', err);
+          }
         }
       })
+
+    await Promise.all(outbox.map(async (send) => await send()))
 
     return newLobby
   },
