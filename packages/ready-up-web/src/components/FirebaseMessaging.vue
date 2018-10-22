@@ -1,7 +1,22 @@
 <template>
   <div id="firebase-messaging">
     <div v-if="lastMessage">
-      {{ lastMessage.notification }}
+      <img :src="lastMessage.notification.icon">
+      <div>
+        {{ lastMessage.notification.title }}
+      </div>
+      <div>
+        {{ lastMessage.notification.body }}
+      </div>
+      <div>
+        <form @submit.prevent="onReadyUp()">
+          <button
+            class="btn btn-primary"
+            type="submit">
+            Ready Up
+          </button>
+        </form>
+      </div>
     </div>
     <p>FirebaseMessaging log</p>
     <code>
@@ -29,12 +44,22 @@ export default {
     }),
     lastMessage () {
       return this.log[this.log.length - 1]
+    },
+    myLobbyMember () {
+      if (!this.lastMessage) return
+      const lobby = JSON.parse(this.lastMessage.data.lobby)
+      return lobby.lobbyMembers.find(({ userId }) => userId == this.session.userId)
     }
   },
   methods: {
     ...mapActions([
-      'updateUser'
-    ])
+      'updateUser',
+      'updateLobbyMember'
+    ]),
+    async onReadyUp () {
+      console.log(this.myLobbyMember)
+      return await this.updateLobbyMember({ id: this.myLobbyMember.id, ready: true })
+    }
   },
   watch: {
     async session (newSession) {

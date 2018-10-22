@@ -12,7 +12,7 @@
       <!--     id="displayName" -->
       <!--     type="text"> -->
       <!-- </fieldset> -->
-      <label for="lobbiesEditSubmit">Create new lobby</label>
+      <label for="lobbiesEditSubmit">Create New Lobby</label>
       <button
         class="btn btn-primary"
         id="lobbiesEditSubmit"

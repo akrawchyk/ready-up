@@ -67,10 +67,8 @@ function lobbyMemberRoutes (fastify, opts, next) {
     },
     async function updateLobbyMember (request, reply) {
       const { lobbyMemberId } = request.params
-      const lobbyMember = await fastify.readyUp.updateLobbyMember({ id:
-        lobbyMemberId,
-        ready
-      })
+      const { ready } = request.body
+      const lobbyMember = await fastify.readyUp.updateLobbyMember({ id: lobbyMemberId, ready })
       reply.code(204)
       return
     }
