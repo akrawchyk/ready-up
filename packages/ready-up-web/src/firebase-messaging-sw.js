@@ -1,6 +1,8 @@
-importScripts('https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/5.5.5/firebase-messaging.js')
+// FIXME write the firebasejs versions from package.json
+importScripts('https://www.gstatic.com/firebasejs/5.5.6/firebase-app.js')
+importScripts('https://www.gstatic.com/firebasejs/5.5.6/firebase-messaging.js')
 
+// FIXME read these fron the environment
 firebase.initializeApp({
   apiKey: 'AIzaSyAiuR85LRVjXMiDoWY-CyzrrvdYEETYDLc',
   messagingSenderId: '751484056905'
