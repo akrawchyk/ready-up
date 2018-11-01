@@ -1,0 +1,78 @@
+config:
+  target: 'https://ready-up.test:3000'
+  processor: './helpers/users.js'
+  phases:
+    - duration: 30
+      arrivalRate: 20
+  plugins:
+    expect: {}
+  http:
+    timeout: 1
+  tls:
+    rejectUnauthorized: false
+  ensure:
+    p95: 100
+scenarios:
+  - flow:
+    - function: 'generateRandomUser'
+    - post:
+        url: '/users'
+        headers:
+          Content-Type: 'application/json'
+          Accept: 'application/json'
+        json:
+          displayName: '{{ displayName }}'
+          password: '{{ password }}'
+        capture:
+          - json: '$.id'
+            as: 'id'
+          - json: '$.displayName'
+            as: 'responseDisplayName'
+        expect:
+          - statusCode: 201
+          - contentType: 'json'
+          - hasProperty: 'displayName'
+          - equals:
+            - '{{ displayName }}'
+            - '{{ responseDisplayName }}'
+    - get:
+        url: '/users/{{ id }}'
+        match:
+          json: '$.displayName'
+          value: '{{ displayName }}'
+        expect:
+          - statusCode: 200
+          - contentType: 'json'
+    - post:
+        url: '/sessions'
+        headers:
+          Content-Type: 'application/json'
+          Accept: 'application/json'
+        json:
+          userDisplayName: '{{ displayName }}'
+          userPassword: '{{ password }}'
+        capture:
+          - json: '$.userDisplayName'
+            as: 'userDisplayName'
+        expect:
+          - statusCode: 201
+          - contentType: 'json'
+          - hasProperty: 'userDisplayName'
+          - equals:
+            - '{{ userDisplayName }}'
+            - '{{ displayName }}'
+    - get:
+        url: '/sessions'
+        capture:
+          - json: '$.userDisplayName'
+            as: 'userDisplayName'
+        match:
+          json: '$.userDisplayName'
+          value: '{{ displayName }}'
+        expect:
+          - statusCode: 200
+          - contentType: 'json'
+          - hasProperty: 'userDisplayName'
+          - equals:
+            - '{{ displayName }}'
+            - '{{ userDisplayName }}'
