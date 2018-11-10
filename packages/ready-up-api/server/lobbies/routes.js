@@ -1,5 +1,6 @@
-function lobbyRoutes (fastify, opts, next) {
-  fastify.post('/lobbies',
+function lobbyRoutes(fastify, opts, next) {
+  fastify.post(
+    '/lobbies',
     {
       schema: {
         body: {
@@ -19,7 +20,7 @@ function lobbyRoutes (fastify, opts, next) {
                 items: {
                   type: 'object',
                   properties: {
-                    id: { type: 'number' },
+                    id: { type: 'number' }
                   }
                 }
               }
@@ -27,20 +28,22 @@ function lobbyRoutes (fastify, opts, next) {
           }
         }
       },
-      beforeHandler: fastify.auth([
-        fastify.verifyUserSession
-      ])
+      beforeHandler: fastify.auth([fastify.verifyUserSession])
     },
-    async function createLobby (request, reply) {
+    async function createLobby(request, reply) {
       const { displayName } = request.body
       const createdByUserId = request.userSession.userId
-      const newLobby = await fastify.readyUp.createLobby({ createdByUserId, displayName })
+      const newLobby = await fastify.readyUp.createLobby({
+        createdByUserId,
+        displayName
+      })
       reply.code(201)
       return newLobby
     }
   )
 
-  fastify.get('/lobbies/:lobbyId',
+  fastify.get(
+    '/lobbies/:lobbyId',
     {
       schema: {
         params: {
@@ -57,7 +60,7 @@ function lobbyRoutes (fastify, opts, next) {
                 items: {
                   type: 'object',
                   properties: {
-                    id: { type: 'number' },
+                    id: { type: 'number' }
                   }
                 }
               }
@@ -66,7 +69,7 @@ function lobbyRoutes (fastify, opts, next) {
         }
       }
     },
-    async function getLobby (request, reply) {
+    async function getLobby(request, reply) {
       const { lobbyId } = request.params
       const lobby = await fastify.readyUp.getLobby({ id: lobbyId })
       return lobby

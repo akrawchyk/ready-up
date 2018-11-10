@@ -1,8 +1,6 @@
 <template>
   <div id="lobbiesHome">
-    <router-link to='lobbies/new'>
-      <a>Create New Lobby</a>
-    </router-link>
+    <router-link to="lobbies/new"> <a>Create New Lobby</a> </router-link>
   </div>
 </template>
 

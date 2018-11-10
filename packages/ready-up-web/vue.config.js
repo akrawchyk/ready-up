@@ -16,9 +16,7 @@ module.exports = {
     }
   },
   devServer: {
-    allowedHosts: [
-      'ready-up.test'
-    ],
+    allowedHosts: ['ready-up.test'],
     historyApiFallback: true,
     host: '0.0.0.0',
     https: {

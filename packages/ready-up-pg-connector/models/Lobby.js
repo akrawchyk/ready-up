@@ -1,11 +1,11 @@
 const Model = require('./BaseModel')
 
 class Lobby extends Model {
-  static get tableName () {
+  static get tableName() {
     return 'lobbies'
   }
 
-  static get relationMappings () {
+  static get relationMappings() {
     return {
       creator: {
         relation: Model.BelongsToOneRelation,

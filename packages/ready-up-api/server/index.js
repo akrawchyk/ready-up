@@ -10,10 +10,7 @@ const fastify = require('fastify')({
 })
 
 fastify.register(require('fastify-cors'), {
-  origin: [
-    'https://ready-up.test:8080',
-    'https://ready-up.test:8000'
-  ],
+  origin: ['https://ready-up.test:8080', 'https://ready-up.test:8000'],
   credentials: true
 })
 fastify.register(require('fastify-secure-session'), {

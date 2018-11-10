@@ -24,25 +24,28 @@ export default new Router({
     {
       path: '/users',
       name: '',
-        // component: () => import(/* webpackChunkName: "users" */'./views/Users.vue'),
-        component: Users,
-        children: [
-          {
-            path: '',
-            name: 'usersHome',
-            component: () => import(/* webpackChunkName: "usersHome" */'./views/UsersHome.vue')
-          },
-          {
-            path: '/users/new',
-            name: 'usersCreate',
-            component: () => import(/* webpackChunkName: "usersEdit" */'./views/UsersEdit.vue')
-          },
-          {
-            path: '/users/:userId',
-            name: 'usersShow',
-            component: () => import(/* webpackChunkName: "usersShow" */'./views/UsersShow.vue')
-          }
-        ]
+      // component: () => import(/* webpackChunkName: "users" */'./views/Users.vue'),
+      component: Users,
+      children: [
+        {
+          path: '',
+          name: 'usersHome',
+          component: () =>
+            import(/* webpackChunkName: "usersHome" */ './views/UsersHome.vue')
+        },
+        {
+          path: '/users/new',
+          name: 'usersCreate',
+          component: () =>
+            import(/* webpackChunkName: "usersEdit" */ './views/UsersEdit.vue')
+        },
+        {
+          path: '/users/:userId',
+          name: 'usersShow',
+          component: () =>
+            import(/* webpackChunkName: "usersShow" */ './views/UsersShow.vue')
+        }
+      ]
     },
     {
       path: '/lobbies',
@@ -53,17 +56,20 @@ export default new Router({
         {
           path: '',
           name: 'lobbiesHome',
-          component: () => import(/* webpackChunkName: "lobbiesHome" */'./views/LobbiesHome.vue')
+          component: () =>
+            import(/* webpackChunkName: "lobbiesHome" */ './views/LobbiesHome.vue')
         },
         {
           path: '/lobbies/new',
           name: 'lobbiesCreate',
-          component: () => import(/* webpackChunkName: "lobbiesEdit" */'./views/LobbiesEdit.vue')
+          component: () =>
+            import(/* webpackChunkName: "lobbiesEdit" */ './views/LobbiesEdit.vue')
         },
         {
           path: '/lobbies/:lobbyId',
           name: 'lobbiesShow',
-          component: () => import(/* webpackChunkName: "lobbiesShow" */'./views/LobbiesShow.vue')
+          component: () =>
+            import(/* webpackChunkName: "lobbiesShow" */ './views/LobbiesShow.vue')
         }
       ]
     }

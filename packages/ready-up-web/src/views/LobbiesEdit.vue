@@ -3,21 +3,22 @@
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
       <!-- <fieldset -->
-      <!--   class="form&#45;group" -->
-      <!--   :disabled="inProgress"> -->
-      <!--   <label for="displayName">Display Name</label> -->
-      <!--   <input -->
-      <!--     v&#45;model="creatingUser.displayName" -->
-      <!--     class="form&#45;control" -->
-      <!--     id="displayName" -->
-      <!--     type="text"> -->
+      <!-- class="form&#45;group" -->
+      <!-- :disabled="inProgress"> -->
+      <!-- <label for="displayName">Display Name</label> -->
+      <!-- <input -->
+      <!-- v&#45;model="creatingUser.displayName" -->
+      <!-- class="form&#45;control" -->
+      <!-- id="displayName" -->
+      <!-- type="text"> -->
       <!-- </fieldset> -->
       <label for="lobbiesEditSubmit">Create New Lobby</label>
       <button
         class="btn btn-primary"
         id="lobbiesEditSubmit"
         type="submit"
-        :disabled="inProgress">
+        :disabled="inProgress"
+      >
         Submit
       </button>
     </form>
@@ -35,7 +36,7 @@ export default {
     ErrorList
   },
   mixins: [formUtilsMixin],
-  data () {
+  data() {
     return {
       inProgress: false,
       errors: []
@@ -43,26 +44,24 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => {
+      user: (state) => {
         return {
           id: state.currentSession.userId,
           displayName: state.currentSession.displayName
         }
       },
-      lobby: state => state.currentLobby
+      lobby: (state) => state.currentLobby
     }),
-    lobbyParams () {
+    lobbyParams() {
       return {
         createdByUserId: this.user.id
       }
     }
   },
   methods: {
-    ...mapActions([
-      'createLobby'
-    ]),
+    ...mapActions(['createLobby']),
 
-    async onSubmit () {
+    async onSubmit() {
       // TODO
       // ;(this.multiLot.id
       //   ? this.editMultiLot(id, article)

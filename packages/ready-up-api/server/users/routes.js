@@ -1,5 +1,6 @@
-function userRoutes (fastify, opts, next) {
-  fastify.post('/users',
+function userRoutes(fastify, opts, next) {
+  fastify.post(
+    '/users',
     {
       schema: {
         body: {
@@ -27,24 +28,29 @@ function userRoutes (fastify, opts, next) {
         }
       }
     },
-    async function createUser (request, reply) {
+    async function createUser(request, reply) {
       const { displayName, password } = request.body
 
       if (!displayName || !password) {
         let error
-        if (!displayName) error = new fastify.InvalidParametersError('displayName')
+        if (!displayName)
+          error = new fastify.InvalidParametersError('displayName')
         if (!password) error = new fastify.InvalidParametersError('password')
         reply.code(400)
         return error
       }
 
-      const newUser = await fastify.readyUp.createUser({ displayName, password })
+      const newUser = await fastify.readyUp.createUser({
+        displayName,
+        password
+      })
       reply.code(201)
       return newUser
     }
   )
 
-  fastify.patch('/users/:userId',
+  fastify.patch(
+    '/users/:userId',
     {
       schema: {
         params: {
@@ -54,11 +60,9 @@ function userRoutes (fastify, opts, next) {
           firebaseMessagingToken: { type: 'string' }
         }
       },
-      beforeHandler: fastify.auth([
-        fastify.verifyUserSession
-      ])
+      beforeHandler: fastify.auth([fastify.verifyUserSession])
     },
-    async function updateUser (request, reply) {
+    async function updateUser(request, reply) {
       let { firebaseMessagingToken } = request.body
 
       if (!firebaseMessagingToken) {
@@ -72,7 +76,8 @@ function userRoutes (fastify, opts, next) {
     }
   )
 
-  fastify.get('/users/:userId',
+  fastify.get(
+    '/users/:userId',
     {
       schema: {
         params: {
@@ -89,7 +94,7 @@ function userRoutes (fastify, opts, next) {
         }
       }
     },
-    async function getUser (request, reply) {
+    async function getUser(request, reply) {
       const { userId } = request.params
       const user = await fastify.readyUp.getUser({ id: userId })
       return user

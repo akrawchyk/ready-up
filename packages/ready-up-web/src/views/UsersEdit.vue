@@ -2,26 +2,23 @@
   <div id="usersEdit">
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
-      <fieldset
-        class="form-group"
-        :disabled="inProgress">
+      <fieldset class="form-group" :disabled="inProgress">
         <label for="displayName">Display Name</label>
         <input
           v-model="creatingUser.displayName"
           class="form-control"
           id="displayName"
-          type="text">
+          type="text"
+        />
         <label for="password">Password</label>
         <input
           v-model="creatingUser.password"
           class="form-control"
           id="password"
-          type="password">
+          type="password"
+        />
       </fieldset>
-      <button
-        class="btn btn-primary"
-        type="submit"
-        :disabled="inProgress">
+      <button class="btn btn-primary" type="submit" :disabled="inProgress">
         Submit
       </button>
     </form>
@@ -39,7 +36,7 @@ export default {
     ErrorList
   },
   mixins: [formUtilsMixin],
-  data () {
+  data() {
     return {
       creatingUser: {},
       inProgress: false,
@@ -47,7 +44,7 @@ export default {
     }
   },
   computed: {
-    userParams () {
+    userParams() {
       return {
         displayName: this.creatingUser.displayName,
         password: this.creatingUser.password
@@ -55,11 +52,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'createUser'
-    ]),
+    ...mapActions(['createUser']),
 
-    async onSubmit () {
+    async onSubmit() {
       // TODO
       // ;(this.multiLot.id
       //   ? this.editMultiLot(id, article)

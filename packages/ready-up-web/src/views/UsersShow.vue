@@ -1,9 +1,7 @@
 <template>
   <div id="usersShow">
     <ErrorList :errors="errors" />
-    <div>
-      {{ user }}
-    </div>
+    <div>{{ user }}</div>
   </div>
 </template>
 
@@ -17,7 +15,7 @@ export default {
   components: {
     ErrorList
   },
-  data () {
+  data() {
     return {
       inProgress: false,
       errors: []
@@ -26,21 +24,19 @@ export default {
   mixins: [formUtilsMixin],
   computed: {
     ...mapState({
-      user: state => state.viewingUser
+      user: (state) => state.viewingUser
     }),
-    userQuery () {
+    userQuery() {
       return {
         id: this.$route.params.userId
       }
     }
   },
   methods: {
-    ...mapActions([
-      'getUser'
-    ]),
+    ...mapActions(['getUser'])
   },
 
-  mounted: async function () {
+  mounted: async function() {
     try {
       await this.getUser(this.userQuery)
     } catch (error) {

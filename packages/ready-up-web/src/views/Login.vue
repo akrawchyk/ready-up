@@ -3,26 +3,23 @@
     <h1>Login</h1>
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
-      <fieldset
-        class="form-group"
-        :disabled="inProgress">
+      <fieldset class="form-group" :disabled="inProgress">
         <label for="displayName">Display Name</label>
         <input
           v-model="user.displayName"
           class="form-control"
           id="displayName"
-          type="text">
+          type="text"
+        />
         <label for="password">Password</label>
         <input
           v-model="user.password"
           class="form-control"
           id="password"
-          type="password">
+          type="password"
+        />
       </fieldset>
-      <button
-        class="btn btn-primary"
-        type="submit"
-        :disabled="inProgress">
+      <button class="btn btn-primary" type="submit" :disabled="inProgress">
         Submit
       </button>
     </form>
@@ -39,8 +36,8 @@ export default {
   components: {
     ErrorList
   },
-  mixins: [ formUtilsMixin ],
-  data () {
+  mixins: [formUtilsMixin],
+  data() {
     return {
       user: {},
       inProgress: false,
@@ -49,9 +46,9 @@ export default {
   },
   computed: {
     ...mapState({
-      session: state => state.currentSession
+      session: (state) => state.currentSession
     }),
-    sessionParams () {
+    sessionParams() {
       return {
         userDisplayName: this.user.displayName,
         userPassword: this.user.password
@@ -59,12 +56,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'createSession',
-      'getSession'
-    ]),
+    ...mapActions(['createSession', 'getSession']),
 
-    async onSubmit () {
+    async onSubmit() {
       this.setProgress()
 
       try {

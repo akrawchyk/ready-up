@@ -1,4 +1,4 @@
-function lobbiesService (fastify, opts, next) {
+function lobbiesService(fastify, opts, next) {
   fastify.register(require('./routes'))
   next()
 }

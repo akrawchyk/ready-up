@@ -4,7 +4,9 @@ import Vuex from 'vuex'
 import ReadyUpSDK from 'ready-up-sdk'
 import httpConnector from 'ready-up-http-connector'
 
-const readyUpSDK = httpConnector(ReadyUpSDK, { apiURL: 'https://ready-up.test:3000' })
+const readyUpSDK = httpConnector(ReadyUpSDK, {
+  apiURL: 'https://ready-up.test:3000'
+})
 
 Vue.use(Vuex)
 
@@ -26,7 +28,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async createSession ({ dispatch, commit }, sessionParams) {
+    async createSession({ dispatch, commit }, sessionParams) {
       try {
         const newSession = await readyUpSDK.createSession(sessionParams)
         commit('setCurrentSession', newSession.body)
@@ -34,7 +36,7 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async getSession ({ dispatch, commit }) {
+    async getSession({ dispatch, commit }) {
       try {
         const session = await readyUpSDK.getSession()
         commit('setCurrentSession', session.body)
@@ -42,7 +44,7 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async createUser ({ dispatch, commit }, userParams) {
+    async createUser({ dispatch, commit }, userParams) {
       try {
         await readyUpSDK.createUser(userParams)
         // commit('setCurrentUser', newUser.body)
@@ -50,7 +52,7 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async updateUser ({ state, dispatch, commit }, { firebaseMessagingToken }) {
+    async updateUser({ state, dispatch, commit }, { firebaseMessagingToken }) {
       try {
         return await readyUpSDK.updateUser({
           id: state.currentSession.userId,
@@ -60,7 +62,7 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async getUser ({ dispatch, commit }, userQuery) {
+    async getUser({ dispatch, commit }, userQuery) {
       try {
         const viewingUser = await readyUpSDK.getUser(userQuery)
         commit('setViewingUser', viewingUser.body)
@@ -68,7 +70,7 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async createLobby ({ dispatch, commit }, lobbyParams) {
+    async createLobby({ dispatch, commit }, lobbyParams) {
       try {
         const newLobby = await readyUpSDK.createLobby(lobbyParams)
         commit('setCurrentLobby', newLobby.body)
@@ -76,13 +78,23 @@ export default new Vuex.Store({
         throw err
       }
     },
-    async updateLobbyMember ({ dispatch, commit }, { id, ready }) {
+    async updateLobbyMember({ dispatch, commit }, { id, ready }) {
       try {
+        // TODO set the lobby member's status
         return await readyUpSDK.updateLobbyMember({
           id,
           ready
         })
       } catch (err) {
+        throw err
+      }
+    },
+    // FIXME should this be query? we want to get 4 calls or so...
+    async getLobbyMember({ dispatch, commit }, lobbyMemberQuery) {
+      try {
+        return await readyUpSDK.getLobbyMember(lobbyMemberQuery)
+      } catch (err) {
+        console.log(err)
         throw err
       }
     }

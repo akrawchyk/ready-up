@@ -9,7 +9,8 @@ const {
   Lobby,
   LobbyMember,
   Notification,
-  Session } = require('./models')
+  Session
+} = require('./models')
 const serviceAccount = require('./ready-up-f1555-firebase-adminsdk-wxb67-632d601424.json')
 
 admin.initializeApp({
@@ -20,7 +21,7 @@ admin.initializeApp({
 const pgInterface = {
   BaseModel,
 
-  async createSession ({ userDisplayName, userPassword }) {
+  async createSession({ userDisplayName, userPassword }) {
     const user = await User.query()
       .findOne({ displayName: userDisplayName })
       .throwIfNotFound()
@@ -30,8 +31,7 @@ const pgInterface = {
 
     // TODO find fresh cached session if exists
 
-    const session = await Session.query()
-      .insert({ userId: user.id })
+    const session = await Session.query().insert({ userId: user.id })
 
     return {
       id: session.id,
@@ -40,7 +40,7 @@ const pgInterface = {
     }
   },
 
-  async getSession ({ id }) {
+  async getSession({ id }) {
     const currentTime = new Date()
     const maxSessionTime = 1000 * 60 * 20 // 20 minutes
     const cutoffTime = new Date(currentTime - maxSessionTime).toISOString()
@@ -50,7 +50,7 @@ const pgInterface = {
       .findOne({ id })
       .andWhere('createdAt', '>', cutoffTime)
       .throwIfNotFound()
-      .then(session => {
+      .then((session) => {
         return {
           userId: session.user.id,
           userDisplayName: session.user.displayName
@@ -58,7 +58,7 @@ const pgInterface = {
       })
   },
 
-  async createUser ({ displayName, password }) {
+  async createUser({ displayName, password }) {
     const hashedPassword = await argon2.hash(password)
 
     return await User.query()
@@ -66,7 +66,7 @@ const pgInterface = {
       .insert({ displayName, hashedPassword })
   },
 
-  async updateUser ({ id, firebaseMessagingToken }) {
+  async updateUser({ id, firebaseMessagingToken }) {
     return await User.query()
       .where({ id })
       .patch({ firebaseMessagingToken })
@@ -74,14 +74,14 @@ const pgInterface = {
       .throwIfNotFound()
   },
 
-  async getUser ({ id }) {
+  async getUser({ id }) {
     return await User.query()
       .returning(User.visibleFields)
       .findById(id)
       .throwIfNotFound()
   },
 
-  async createLobby ({ createdByUserId, displayName }) {
+  async createLobby({ createdByUserId, displayName }) {
     const knex = Notification.knex()
     let trx
     let newLobby
@@ -95,34 +95,41 @@ const pgInterface = {
         // FIXME query user allowed permission
         .limit(4)
         .pluck('id')
-        .then(userIds => userIds.map(id => {
-          return {
-            userId: id,
-            lobbyId: "#ref{newLobby.id}",
-            createdByUserId
-          }
-        }))
+        .then((userIds) =>
+          userIds.map((id) => {
+            return {
+              userId: id,
+              lobbyId: '#ref{newLobby.id}',
+              createdByUserId
+            }
+          })
+        )
 
       newLobby = await Lobby.query()
-        .insertGraphAndFetch([{
-          '#id': 'newLobby',
-          createdByUserId,
-          displayName,
-          lobbyMembers: invitees
-        }])
-        .then(graph => graph[0])
+        .insertGraphAndFetch([
+          {
+            '#id': 'newLobby',
+            createdByUserId,
+            displayName,
+            lobbyMembers: invitees
+          }
+        ])
+        .then((graph) => graph[0])
 
-      const recipients = newLobby.lobbyMembers
-        .filter(lobbyMember => lobbyMember.userId !== createdByUserId)
+      const recipients = newLobby.lobbyMembers.filter(
+        (lobbyMember) => lobbyMember.userId !== createdByUserId
+      )
 
       notifications = await Notification.query()
         .eager('recipient')
-        .insert(recipients.map(lobbyMember => {
-          return {
-            recipientUserId: lobbyMember.userId,
-            createdByUserId
-          }
-        }))
+        .insert(
+          recipients.map((lobbyMember) => {
+            return {
+              recipientUserId: lobbyMember.userId,
+              createdByUserId
+            }
+          })
+        )
 
       await trx.commit()
     } catch (err) {
@@ -131,75 +138,80 @@ const pgInterface = {
     }
 
     // FIXME move to background job that looks for notification records that are not "sent"
-    const outbox = notifications
-      .map((notification) => {
-        // FIXME skip if no recipient token?
-        return async function sendNotification () {
-          const title = newLobby.displayName || `New Lobby ${newLobby.id}`
-          const body = `Ready up with ${newLobby.lobbyMembers.length} others!`
-          const message = {
-            // TODO lobby presenter for notifications (max 4KB)
-            data: { lobby: JSON.stringify(newLobby) },
-            // https://firebase.google.com/docs/cloud-messaging/admin/send-messages#defining_the_message
-            webpush: {
-              notification: {
-                title,
-                body,
-                icon: 'https://ready-up.test:8000/img/icons/android-chrome-192x192.png'
-              }
-            },
-            token: notification.recipient.firebaseMessagingToken
-          }
-
-          try {
-            const response = await admin.messaging()
-              .send(message)
-            console.log('Successfully sent message: ', response)
-            return await notification.$query()
-              .patch({ sent: true })
-          } catch (err) {
-            console.log('Error sending message:', err);
-          }
+    // FIXME make a separate notification module
+    const outbox = notifications.map((notification) => {
+      // FIXME skip if no recipient token?
+      return async function sendNotification() {
+        if (!notification.recipient.firebaseMessagingToken) {
+          // dont send to users that aren't accepting notifications
+          return Promise.resolve()
         }
-      })
 
-    await Promise.all(outbox.map(async (send) => await send()))
+        const title = newLobby.displayName || `New Lobby ${newLobby.id}`
+        const body = `Ready up with ${newLobby.lobbyMembers.length} others!`
+        const message = {
+          // TODO lobby presenter for notifications (max 4KB)
+          data: { lobby: JSON.stringify(newLobby) },
+          // https://firebase.google.com/docs/cloud-messaging/admin/send-messages#defining_the_message
+          webpush: {
+            notification: {
+              title,
+              body,
+              // icon: 'https://ready-up.test:8000/img/icons/android-chrome-192x192.png'
+              icon:
+                'https://ready-up.test:8080/img/icons/android-chrome-192x192.png'
+            }
+          },
+          // FIXME add Device model, this only sends notifications to the last-used device
+          token: notification.recipient.firebaseMessagingToken
+        }
+
+        try {
+          const response = await admin.messaging().send(message)
+          console.log('Successfully sent message: ', response)
+          return await notification.$query().patch({ sent: true })
+        } catch (err) {
+          console.log('Error sending message:', err)
+        }
+      }
+    })
+
+    await Promise.all(outbox.map((send) => send()))
 
     return newLobby
   },
 
-  async getLobby ({ id }) {
+  async getLobby({ id }) {
     return await Lobby.query()
       .eager('lobbyMembers')
       .findById(id)
       .throwIfNotFound()
   },
 
-  async createLobbyMember ({ lobbyId, userId }) {
-    return await LobbyMember.query()
-      .insert({ lobbyId, userId })
+  async createLobbyMember({ lobbyId, userId }) {
+    return await LobbyMember.query().insert({ lobbyId, userId })
   },
 
-  async updateLobbyMember ({ id, ready }) {
+  async updateLobbyMember({ id, ready }) {
     return await LobbyMember.query()
       .where({ id })
       .patch({ ready })
       .throwIfNotFound()
   },
 
-  async getLobbyMember ({ id }) {
+  async getLobbyMember({ id }) {
     return await LobbyMember.query()
       .findById(id)
       .throwIfNotFound()
   },
 
-  async createNotification ({ createdByUserId }) {
+  async createNotification({ createdByUserId }) {
     return await Notification.query()
       .insert({ createdByUserId })
       .returning(['id', 'sent', 'createdByUserId'])
   },
 
-  async getNotification ({ id }) {
+  async getNotification({ id }) {
     return await Notification.query()
       .findById(id)
       .throwIfNotFound()
@@ -224,21 +236,20 @@ function readyUpPgConnector(sdk, opts) {
 
   BaseModel.knex(knex)
 
-  const implementation = Object.keys(sdk)
-    .reduce((impl, fnName) => {
-      if (typeof pgInterface[fnName] !== 'function') {
-        return Object.assign(impl, {
-          [fnName]: sdk[fnName]
-        })
-      }
+  const implementation = Object.keys(sdk).reduce((impl, fnName) => {
+    if (typeof pgInterface[fnName] !== 'function') {
       return Object.assign(impl, {
-        [fnName]: new Proxy(sdk[fnName], {
-          apply: async function(target, thisArg, argumentsList) {
-            return await pgInterface[fnName](...argumentsList)
-          }
-        })
+        [fnName]: sdk[fnName]
       })
-    }, {})
+    }
+    return Object.assign(impl, {
+      [fnName]: new Proxy(sdk[fnName], {
+        apply: async function(target, thisArg, argumentsList) {
+          return await pgInterface[fnName](...argumentsList)
+        }
+      })
+    })
+  }, {})
 
   Object.assign(implementation, { BaseModel })
 

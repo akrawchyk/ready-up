@@ -1,5 +1,6 @@
-function lobbyMemberRoutes (fastify, opts, next) {
-  fastify.post('/lobbyMembers',
+function lobbyMemberRoutes(fastify, opts, next) {
+  fastify.post(
+    '/lobbyMembers',
     {
       schema: {
         body: {
@@ -28,11 +29,9 @@ function lobbyMemberRoutes (fastify, opts, next) {
           }
         }
       },
-      beforeHandler: fastify.auth([
-        fastify.verifyUserSession
-      ])
+      beforeHandler: fastify.auth([fastify.verifyUserSession])
     },
-    async function createLobbyMember (request, reply) {
+    async function createLobbyMember(request, reply) {
       const { lobbyId, userId } = request.body
 
       if (!lobbyId || !userId) {
@@ -54,7 +53,8 @@ function lobbyMemberRoutes (fastify, opts, next) {
     }
   )
 
-  fastify.patch('/lobbyMembers/:lobbyMemberId',
+  fastify.patch(
+    '/lobbyMembers/:lobbyMemberId',
     {
       schema: {
         params: {
@@ -65,16 +65,20 @@ function lobbyMemberRoutes (fastify, opts, next) {
         }
       }
     },
-    async function updateLobbyMember (request, reply) {
+    async function updateLobbyMember(request, reply) {
       const { lobbyMemberId } = request.params
       const { ready } = request.body
-      const lobbyMember = await fastify.readyUp.updateLobbyMember({ id: lobbyMemberId, ready })
+      const lobbyMember = await fastify.readyUp.updateLobbyMember({
+        id: lobbyMemberId,
+        ready
+      })
       reply.code(204)
       return
     }
   )
 
-  fastify.get('/lobbyMembers/:lobbyMemberId',
+  fastify.get(
+    '/lobbyMembers/:lobbyMemberId',
     {
       schema: {
         params: {
@@ -93,9 +97,11 @@ function lobbyMemberRoutes (fastify, opts, next) {
         }
       }
     },
-    async function getLobbyMember (request, reply) {
+    async function getLobbyMember(request, reply) {
       const { lobbyMemberId } = request.params
-      const lobbyMember = await fastify.readyUp.getLobbyMember({ id: lobbyMemberId })
+      const lobbyMember = await fastify.readyUp.getLobbyMember({
+        id: lobbyMemberId
+      })
       return lobbyMember
     }
   )

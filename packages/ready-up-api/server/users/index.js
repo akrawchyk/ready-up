@@ -1,4 +1,4 @@
-function usersService (fastify, opts, next) {
+function usersService(fastify, opts, next) {
   fastify.register(require('./routes'))
   next()
 }

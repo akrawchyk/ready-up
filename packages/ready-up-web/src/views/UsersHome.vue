@@ -1,8 +1,6 @@
 <template>
   <div id="usersHome">
-    <router-link to='users/new'>
-      <a>Create New User</a>
-    </router-link>
+    <router-link to="users/new"> <a>Create New User</a> </router-link>
     <!-- TODO users list -->
   </div>
 </template>

@@ -6,7 +6,7 @@ class InvalidParametersError extends Error {
   }
 }
 
-function fastifyErrors (fastify, opts, next) {
+function fastifyErrors(fastify, opts, next) {
   fastify.decorate('InvalidParametersError', InvalidParametersError)
   next()
 }

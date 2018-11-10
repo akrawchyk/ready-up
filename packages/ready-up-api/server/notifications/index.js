@@ -1,4 +1,4 @@
-function notificationsService (fastify, opts, next) {
+function notificationsService(fastify, opts, next) {
   fastify.register(require('./routes'))
   next()
 }

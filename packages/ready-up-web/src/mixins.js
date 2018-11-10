@@ -1,23 +1,21 @@
 const formUtilsMixin = {
   methods: {
-    setProgress () {
+    setProgress() {
       this.errors = []
       this.inProgress = true
     },
 
-    setError (error) {
+    setError(error) {
       this.inProgress = false
       const message = error.message || 'An unknown error occurred.'
       this.errors = [message]
     },
 
-    reset () {
+    reset() {
       this.inProgress = false
       this.errors = []
     }
   }
 }
 
-export {
-  formUtilsMixin
-}
+export { formUtilsMixin }

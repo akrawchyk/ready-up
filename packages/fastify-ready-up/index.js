@@ -1,18 +1,19 @@
 const fp = require('fastify-plugin')
-const {
-  ValidationError,
-  NotFoundError } = require('objection')
+const { ValidationError, NotFoundError } = require('objection')
 const {
   wrapError,
   DBError,
   UniqueViolationError,
-  ForeignKeyViolationError } = require('objection-db-errors')
+  ForeignKeyViolationError
+} = require('objection-db-errors')
 const pgConnector = require('ready-up-pg-connector')
 const ReadyUpSDK = require('ready-up-sdk')
 
-function fastifyReadyUp (fastify, opts, next) {
+function fastifyReadyUp(fastify, opts, next) {
   try {
-    readyUpSDK = pgConnector(ReadyUpSDK, { pgConnectionString: 'postgresql://postgres@localhost/ready-up' })
+    readyUpSDK = pgConnector(ReadyUpSDK, {
+      pgConnectionString: 'postgresql://postgres@localhost/ready-up'
+    })
   } catch (err) {
     next(err)
     return
@@ -35,7 +36,7 @@ function fastifyReadyUp (fastify, opts, next) {
       done(new ReadyUpSDK.NotAuthorizedError())
     }
   })
-  fastify.setErrorHandler(async function (err, request, reply) {
+  fastify.setErrorHandler(async function(err, request, reply) {
     err = wrapError(err)
     const retError = new Error()
 

@@ -1,8 +1,6 @@
 <template>
   <div id="lobbiesShow">
-    <div>
-      {{ lobby }}
-    </div>
+    <div>{{ lobby }}</div>
   </div>
 </template>
 
@@ -11,9 +9,10 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'LobbiesShow',
+  // TODO build LobbyMembersList
   computed: {
     ...mapState({
-      lobby: state => state.currentLobby
+      lobby: (state) => state.currentLobby
     })
   }
 }

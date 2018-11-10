@@ -5,9 +5,9 @@
       <router-link to="/users">Users</router-link> |
       <router-link to="/lobbies">Lobbies</router-link>
     </div>
-    <router-view/>
+    <router-view />
 
-    <FirebaseMessaging/>
+    <FirebaseMessaging />
   </div>
 </template>
 
@@ -24,7 +24,8 @@ export default {
 
 <style>
 #app {
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   /* -webkit-font-smoothing: antialiased; */
   /* -moz-osx-font-smoothing: grayscale; */
   text-align: center;

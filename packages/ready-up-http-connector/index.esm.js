@@ -5,39 +5,43 @@ function readyUpHTTPConnector(sdk, opts) {
   const agent = Request.agent()
 
   const httpInterface = {
-    async createSession ({ userDisplayName, userPassword }) {
-      return await agent.post(`${API_URL}/sessions`)
+    async createSession({ userDisplayName, userPassword }) {
+      return await agent
+        .post(`${API_URL}/sessions`)
         .send({ userDisplayName, userPassword })
         .withCredentials()
         .set('accept', 'json')
     },
 
-    async getSession () {
-      return await agent.get(`${API_URL}/sessions`)
+    async getSession() {
+      return await agent
+        .get(`${API_URL}/sessions`)
         .withCredentials()
         .set('accept', 'json')
     },
 
-    async createUser ({ displayName, password }) {
-      return await agent.post(`${API_URL}/users`)
+    async createUser({ displayName, password }) {
+      return await agent
+        .post(`${API_URL}/users`)
         .send({ displayName, password })
         .set('accept', 'json')
     },
 
-    async updateUser ({ id, firebaseMessagingToken }) {
-      return await agent.patch(`${API_URL}/users/${id}`)
+    async updateUser({ id, firebaseMessagingToken }) {
+      return await agent
+        .patch(`${API_URL}/users/${id}`)
         .send({ firebaseMessagingToken })
         .withCredentials()
         .set('accept', 'json')
     },
 
-    async getUser ({ id }) {
-      return await agent.get(`${API_URL}/users/${id}`)
-        .set('accept', 'json')
+    async getUser({ id }) {
+      return await agent.get(`${API_URL}/users/${id}`).set('accept', 'json')
     },
 
-    async createLobby ({ createdByUserId, displayName }) {
-      return await agent.post(`${API_URL}/lobbies`)
+    async createLobby({ createdByUserId, displayName }) {
+      return await agent
+        .post(`${API_URL}/lobbies`)
         .send({
           createdByUserId,
           displayName
@@ -46,14 +50,16 @@ function readyUpHTTPConnector(sdk, opts) {
         .set('accept', 'json')
     },
 
-    async getLobby ({ id }) {
-      return agent.get(`${API_URL}/lobbies/${id}`)
+    async getLobby({ id }) {
+      return agent
+        .get(`${API_URL}/lobbies/${id}`)
         .withCredentials()
         .set('accept', 'json')
     },
 
-    async createLobbyMember ({ lobbyId, userId }) {
-      return await agent.post(`${API_URL}/lobbyMembers`)
+    async createLobbyMember({ lobbyId, userId }) {
+      return await agent
+        .post(`${API_URL}/lobbyMembers`)
         .send({
           lobbyId,
           userId
@@ -62,14 +68,16 @@ function readyUpHTTPConnector(sdk, opts) {
         .set('accept', 'json')
     },
 
-    async getLobbyMember ({ id }) {
-      return await agent.get(`${API_URL}/lobbyMembers/${id}`)
+    async getLobbyMember({ id }) {
+      return await agent
+        .get(`${API_URL}/lobbyMembers/${id}`)
         .withCredentials()
         .set('accept', 'json')
     },
 
-    async updateLobbyMember ({ id, ready }) {
-      return await agent.patch(`${API_URL}/lobbyMembers/${id}`)
+    async updateLobbyMember({ id, ready }) {
+      return await agent
+        .patch(`${API_URL}/lobbyMembers/${id}`)
         .send({ ready })
         .withCredentials()
         .set('accept', 'json')

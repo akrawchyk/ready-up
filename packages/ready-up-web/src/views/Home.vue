@@ -4,18 +4,12 @@
     {{ session }}
     <p v-if="session">
       Hello, {{ session.userDisplayName }}!
-      <router-link to="lobbies/new">
-        Create a new lobby
-      </router-link>
+      <router-link to="lobbies/new"> Create a new lobby </router-link>
     </p>
     <p v-else>
-      <router-link to="users/new">
-        Create a new user
-      </router-link>
+      <router-link to="users/new"> Create a new user </router-link>
       or
-      <router-link to="login">
-        login to an existing one
-      </router-link>
+      <router-link to="login"> login to an existing one </router-link>
     </p>
   </div>
 </template>
@@ -27,8 +21,8 @@ export default {
   name: 'Home',
   computed: {
     ...mapState({
-      session: state => state.currentSession
+      session: (state) => state.currentSession
     })
-  },
+  }
 }
 </script>

@@ -1,8 +1,6 @@
 <template>
   <div v-if="errors.length > 0">
-    <div v-for="error in errors">
-      {{ error }}
-    </div>
+    <div v-for="error in errors">{{ error }}</div>
   </div>
 </template>
 
