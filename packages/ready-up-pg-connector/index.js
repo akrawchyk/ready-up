@@ -3,14 +3,7 @@ const { transaction } = require('objection')
 const argon2 = require('@phc/argon2')
 const admin = require('firebase-admin')
 const { NotAuthorizedError } = require('ready-up-sdk')
-const {
-  BaseModel,
-  User,
-  Lobby,
-  LobbyMember,
-  Notification,
-  Session
-} = require('./models')
+const { BaseModel, User, Lobby, LobbyMember, Notification, Session } = require('./models')
 const serviceAccount = require('./ready-up-f1555-firebase-adminsdk-wxb67-632d601424.json')
 
 admin.initializeApp({
@@ -158,8 +151,7 @@ const pgInterface = {
               title,
               body,
               // icon: 'https://ready-up.test:8000/img/icons/android-chrome-192x192.png'
-              icon:
-                'https://ready-up.test:8080/img/icons/android-chrome-192x192.png'
+              icon: 'https://ready-up.test:8080/img/icons/android-chrome-192x192.png'
             }
           },
           // FIXME add Device model, this only sends notifications to the last-used device

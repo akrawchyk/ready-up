@@ -33,10 +33,8 @@ function sessionRoutes(fastify, opts, next) {
 
       if (!userDisplayName || !userPassword) {
         let error
-        if (!userDisplayName)
-          error = new fastify.InvalidParametersError('userDisplayName')
-        if (!userPassword)
-          error = new fastify.InvalidParametersError('userPassword')
+        if (!userDisplayName) error = new fastify.InvalidParametersError('userDisplayName')
+        if (!userPassword) error = new fastify.InvalidParametersError('userPassword')
         reply.code(400)
         return error
       }

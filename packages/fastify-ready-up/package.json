@@ -11,6 +11,8 @@
   "dependencies": {
     "fastify-plugin": "^1.2.1",
     "objection": "^1.4.0",
-    "objection-db-errors": "^1.0.0"
+    "objection-db-errors": "^1.0.0",
+    "ready-up-pg-connector": "^0.0.0",
+    "ready-up-sdk": "^0.0.0"
   }
 }

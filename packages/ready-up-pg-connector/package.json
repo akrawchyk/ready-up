@@ -13,7 +13,8 @@
     "firebase-admin": "^6.1.0",
     "knex": "^0.15.2",
     "objection": "^1.4.0",
-    "pg": "^7.6.0"
+    "pg": "^7.6.0",
+    "ready-up-sdk": "^0.0.0"
   },
   "optionalDependencies": {
     "pg-native": "^3.0.0"

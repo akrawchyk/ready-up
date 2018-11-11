@@ -4,17 +4,18 @@ const { readFileSync } = require('fs')
 const fastify = require('fastify')({
   logger: true,
   https: {
-    key: readFileSync(join(__dirname, 'server.key')),
-    cert: readFileSync(join(__dirname, 'server.crt'))
+    cert: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
+    key: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
   }
 })
 
 fastify.register(require('fastify-cors'), {
-  origin: ['https://ready-up.test:8080', 'https://ready-up.test:8000'],
+  // FIXME use something to configure this as cast from csv string
+  origin: process.env.READY_UP_ALLOWED_ORIGINS.split(','),
   credentials: true
 })
 fastify.register(require('fastify-secure-session'), {
-  key: readFileSync(join(__dirname, 'secret-key')),
+  key: readFileSync(process.env.READY_UP_SESSION_SECRET_KEY_PATH),
   cookie: {
     httpOnly: true,
     secure: true
@@ -34,7 +35,10 @@ fastify.register(require('./notifications'))
 const listen = async () => {
   try {
     await fastify.ready()
-    const address = await fastify.listen(3000, '0.0.0.0')
+    const address = await fastify.listen(
+      process.env.READY_UP_LISTEN_PORT,
+      process.env.READY_UP_LISTEN_ADDRESS
+    )
     fastify.log.info(`server listening on ${address}`)
   } catch (err) {
     fastify.log.error(err)

@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import ReadyUpSDK from 'ready-up-sdk'
 import httpConnector from 'ready-up-http-connector'
 
+// FIXME configurable api url from environment at build time
 const readyUpSDK = httpConnector(ReadyUpSDK, {
   apiURL: 'https://ready-up.test:3000'
 })

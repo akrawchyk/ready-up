@@ -12,7 +12,7 @@ const ReadyUpSDK = require('ready-up-sdk')
 function fastifyReadyUp(fastify, opts, next) {
   try {
     readyUpSDK = pgConnector(ReadyUpSDK, {
-      pgConnectionString: 'postgresql://postgres@localhost/ready-up'
+      pgConnectionString: process.env.READY_UP_PG_CONNECTION_STRING
     })
   } catch (err) {
     next(err)

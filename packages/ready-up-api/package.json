@@ -1,6 +1,6 @@
 {
   "name": "ready-up",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "ready up",
   "main": "server/index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "fastify-cookie": "^2.0.2",
     "fastify-cors": "^0.2.0",
     "fastify-plugin": "^1.2.1",
+    "fastify-ready-up": "^0.0.0",
     "fastify-secure-session": "^0.4.3",
     "fastify-sensible": "^0.2.0"
   },

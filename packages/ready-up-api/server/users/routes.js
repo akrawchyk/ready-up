@@ -33,8 +33,7 @@ function userRoutes(fastify, opts, next) {
 
       if (!displayName || !password) {
         let error
-        if (!displayName)
-          error = new fastify.InvalidParametersError('displayName')
+        if (!displayName) error = new fastify.InvalidParametersError('displayName')
         if (!password) error = new fastify.InvalidParametersError('password')
         reply.code(400)
         return error

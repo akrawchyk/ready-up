@@ -20,8 +20,9 @@ module.exports = {
     historyApiFallback: true,
     host: '0.0.0.0',
     https: {
-      key: readFileSync('./server.key'),
-      cert: readFileSync('./server.crt')
-    }
+      key: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
+      cert: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
+    },
+    public: 'ready-up.test:8080'
   }
 }
