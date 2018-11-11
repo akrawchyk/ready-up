@@ -1,38 +1,36 @@
 import Request from 'superagent'
+import prefix from 'superagent-prefix'
 
 function readyUpHTTPConnector(sdk, opts) {
   const API_URL = opts.apiURL || 'https://localhost:3000'
   const agent = Request.agent()
+    .use(prefix(API_URL))
+    .withCredentials()
+    .set('accept', 'json')
 
   const httpInterface = {
     async createSession({ userDisplayName, userPassword }) {
       return await agent
-        .post(`${API_URL}/sessions`)
+        .post(`/sessions`)
         .send({ userDisplayName, userPassword })
-        .withCredentials()
-        .set('accept', 'json')
     },
 
     async getSession() {
       return await agent
-        .get(`${API_URL}/sessions`)
+        .get(`/sessions`)
         .withCredentials()
-        .set('accept', 'json')
     },
 
     async createUser({ displayName, password }) {
       return await agent
-        .post(`${API_URL}/users`)
+        .post(`/users`)
         .send({ displayName, password })
-        .set('accept', 'json')
     },
 
     async updateUser({ id, firebaseMessagingToken }) {
       return await agent
-        .patch(`${API_URL}/users/${id}`)
+        .patch(`/users/${id}`)
         .send({ firebaseMessagingToken })
-        .withCredentials()
-        .set('accept', 'json')
     },
 
     async getUser({ id }) {
@@ -41,46 +39,36 @@ function readyUpHTTPConnector(sdk, opts) {
 
     async createLobby({ createdByUserId, displayName }) {
       return await agent
-        .post(`${API_URL}/lobbies`)
+        .post(`/lobbies`)
         .send({
           createdByUserId,
           displayName
         })
-        .withCredentials()
-        .set('accept', 'json')
     },
 
     async getLobby({ id }) {
       return agent
-        .get(`${API_URL}/lobbies/${id}`)
-        .withCredentials()
-        .set('accept', 'json')
+        .get(`/lobbies/${id}`)
     },
 
     async createLobbyMember({ lobbyId, userId }) {
       return await agent
-        .post(`${API_URL}/lobbyMembers`)
+        .post(`/lobbyMembers`)
         .send({
           lobbyId,
           userId
         })
-        .withCredentials()
-        .set('accept', 'json')
     },
 
     async getLobbyMember({ id }) {
       return await agent
-        .get(`${API_URL}/lobbyMembers/${id}`)
-        .withCredentials()
-        .set('accept', 'json')
+        .get(`/lobbyMembers/${id}`)
     },
 
     async updateLobbyMember({ id, ready }) {
       return await agent
-        .patch(`${API_URL}/lobbyMembers/${id}`)
+        .patch(`/lobbyMembers/${id}`)
         .send({ ready })
-        .withCredentials()
-        .set('accept', 'json')
     }
   }
 

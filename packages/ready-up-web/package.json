@@ -13,6 +13,7 @@
     "ready-up-http-connector": "^0.0.0",
     "ready-up-sdk": "^0.0.0",
     "register-service-worker": "^1.0.0",
+    "superagent-prefix": "0.0.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

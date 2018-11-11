@@ -2,20 +2,17 @@ const { readFileSync } = require('fs')
 const isDevelopment = process.env.NODE_ENV === 'development'
 process.env.VUE_APP_VERSION = require('./package.json').version
 
-module.exports = {
-  // FIXME
-  // configureWebpack: config => {
-  //   if (isDevelopment) {
-  //     config.entry.poll = 'webpack/hot/poll?1000'
-  //   }
-  // },
+const config = {
   pwa: {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'src/firebase-messaging-sw.js'
     }
-  },
-  devServer: {
+  }
+}
+
+if (isDevelopment) {
+  config.devServer = {
     allowedHosts: ['ready-up.test'],
     historyApiFallback: true,
     host: '0.0.0.0',
@@ -26,3 +23,5 @@ module.exports = {
     public: 'ready-up.test:8080'
   }
 }
+
+module.exports = config
