@@ -4,20 +4,28 @@
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
       <fieldset class="form-group" :disabled="inProgress">
-        <label for="displayName">Display Name</label>
-        <input
-          v-model="user.displayName"
-          class="form-control"
-          id="displayName"
-          type="text"
-        />
-        <label for="password">Password</label>
-        <input
-          v-model="user.password"
-          class="form-control"
-          id="password"
-          type="password"
-        />
+        <div>
+          <p>
+            <label for="displayName">Display Name</label>
+          </p>
+          <input
+            v-model="user.displayName"
+            class="form-control"
+            id="displayName"
+            type="text"
+          />
+        </div>
+        <div>
+          <p>
+            <label for="password">Password</label>
+          </p>
+          <input
+            v-model="user.password"
+            class="form-control"
+            id="password"
+            type="password"
+          />
+        </div>
       </fieldset>
       <button class="btn btn-primary" type="submit" :disabled="inProgress">
         Submit

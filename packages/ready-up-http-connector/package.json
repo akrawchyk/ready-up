@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Andrew Krawchyk",
+  "private": true,
   "license": "UNLICENSED",
   "dependencies": {
     "superagent": "^4.0.0-beta.5"

@@ -33,6 +33,7 @@ function fastifyReadyUp(fastify, opts, next) {
 
       done()
     } catch (err) {
+      console.error(err)
       done(new ReadyUpSDK.NotAuthorizedError())
     }
   })

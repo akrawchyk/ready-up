@@ -6,6 +6,8 @@ const config = {
   pwa: {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
+      importWorkboxFrom: 'local',
       swSrc: 'src/firebase-messaging-sw.js'
     }
   }
@@ -17,8 +19,10 @@ if (isDevelopment) {
     historyApiFallback: true,
     host: '0.0.0.0',
     https: {
-      key: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
-      cert: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
+      // key: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
+      // cert: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
+      key: readFileSync('/home/andrew/tmp/ssl/ready-up.test.key'),
+      cert: readFileSync('/home/andrew/tmp/ssl/ready-up.test.crt')
     },
     public: 'ready-up.test:8080'
   }

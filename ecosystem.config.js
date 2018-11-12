@@ -9,23 +9,29 @@ module.exports = {
       instances: 1,
       autorestart: true,
       watch: [
-        'packages/fastify-ready-up/**/*.js',
-        'packages/ready-up-api/**/*.js',
-        'packages/ready-up-pg-connector/**/*.js',
-        'packages/ready-up-sdk/**/*.js'
+        'packages/fastify-ready-up/**',
+        'packages/ready-up-api/**',
+        'packages/ready-up-pg-connector/**',
+        'packages/ready-up-sdk/**'
       ],
-      ignore_watch: '*node_modules*',
+      ignore_watch: '**/node_modules/**',
       max_memory_restart: '1G',
       env: {
         NODE_ENV: 'development',
         DEBUG: 'knex:query',
         READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
         READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key',
-        READY_UP_ALLOWED_ORIGINS: 'https://ready-up.test:8080,https://ready-up.test:8000',
+        READY_UP_ALLOWED_ORIGINS: ['https://ready-up.test:8080', 'https://ready-up.test:8000'].join(
+          ','
+        ),
         READY_UP_LISTEN_ADDRESS: '0.0.0.0',
         READY_UP_LISTEN_PORT: 3000,
         READY_UP_PG_CONNECTION_STRING: 'postgresql://postgres@localhost/ready-up',
-        READY_UP_SESSION_SECRET_KEY_PATH: '/home/andrew/tmp/ready-up-session-secret-key'
+        READY_UP_SESSION_SECRET_KEY_PATH: '/home/andrew/tmp/ready-up-session-secret-key',
+        READY_UP_FIREBASE_SERVICE_ACCOUNT_KEY_PATH:
+          '/home/andrew/tmp/ready-up-f1555-firebase-adminsdk-wxb67-632d601424.json',
+        READY_UP_FIREBASE_MESSAGING_SENDER_ID: '751484056905',
+        READY_UP_MAX_SESSION_MS: 1000 * 60 * 20 // 20 minutes
       },
       env_production: {
         NODE_ENV: 'production'
@@ -39,7 +45,7 @@ module.exports = {
 
       instances: 1,
       autorestart: true,
-      watch: ['packages/ready-up-web/dist/**/*'],
+      watch: ['packages/ready-up-web/dist/**'],
       env: {
         READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
         READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key'

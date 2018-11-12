@@ -10,65 +10,49 @@ function readyUpHTTPConnector(sdk, opts) {
 
   const httpInterface = {
     async createSession({ userDisplayName, userPassword }) {
-      return await agent
-        .post(`/sessions`)
-        .send({ userDisplayName, userPassword })
+      return await agent.post(`/sessions`).send({ userDisplayName, userPassword })
     },
 
     async getSession() {
-      return await agent
-        .get(`/sessions`)
-        .withCredentials()
+      return await agent.get(`/sessions`)
     },
 
     async createUser({ displayName, password }) {
-      return await agent
-        .post(`/users`)
-        .send({ displayName, password })
+      return await agent.post(`/users`).send({ displayName, password })
     },
 
     async updateUser({ id, firebaseMessagingToken }) {
-      return await agent
-        .patch(`/users/${id}`)
-        .send({ firebaseMessagingToken })
+      return await agent.patch(`/users/${id}`).send({ firebaseMessagingToken })
     },
 
     async getUser({ id }) {
-      return await agent.get(`${API_URL}/users/${id}`).set('accept', 'json')
+      return await agent.get(`/users/${id}`)
     },
 
     async createLobby({ createdByUserId, displayName }) {
-      return await agent
-        .post(`/lobbies`)
-        .send({
-          createdByUserId,
-          displayName
-        })
+      return await agent.post(`/lobbies`).send({
+        createdByUserId,
+        displayName
+      })
     },
 
     async getLobby({ id }) {
-      return agent
-        .get(`/lobbies/${id}`)
+      return agent.get(`/lobbies/${id}`)
     },
 
     async createLobbyMember({ lobbyId, userId }) {
-      return await agent
-        .post(`/lobbyMembers`)
-        .send({
-          lobbyId,
-          userId
-        })
+      return await agent.post(`/lobbyMembers`).send({
+        lobbyId,
+        userId
+      })
     },
 
     async getLobbyMember({ id }) {
-      return await agent
-        .get(`/lobbyMembers/${id}`)
+      return await agent.get(`/lobbyMembers/${id}`)
     },
 
     async updateLobbyMember({ id, ready }) {
-      return await agent
-        .patch(`/lobbyMembers/${id}`)
-        .send({ ready })
+      return await agent.patch(`/lobbyMembers/${id}`).send({ ready })
     }
   }
 

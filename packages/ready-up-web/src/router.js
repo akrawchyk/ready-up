@@ -6,8 +6,7 @@ import Users from './views/Users.vue'
 import Lobbies from './views/Lobbies.vue'
 
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -58,7 +57,10 @@ export default new Router({
         {
           path: '/lobbies/new',
           name: 'lobbiesCreate',
-          component: () => import(/* webpackChunkName: "lobbiesEdit" */ './views/LobbiesEdit.vue')
+          component: () => import(/* webpackChunkName: "lobbiesEdit" */ './views/LobbiesEdit.vue'),
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path: '/lobbies/:lobbyId',
@@ -69,3 +71,26 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    // FIXME some way to identify a current session outside of vuex
+    // could use local storage to set the last logged in timestamp, we have http only cookies
+    if (!this.currentSession) {
+      console.log('uh oh, no session!')
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath },
+        replace: true
+      })
+      console.log('return')
+      return
+    }
+  }
+
+  next()
+})
+
+export default router

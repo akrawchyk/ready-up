@@ -4,11 +4,11 @@ const argon2 = require('@phc/argon2')
 const admin = require('firebase-admin')
 const { NotAuthorizedError } = require('ready-up-sdk')
 const { BaseModel, User, Lobby, LobbyMember, Notification, Session } = require('./models')
-const serviceAccount = require('./ready-up-f1555-firebase-adminsdk-wxb67-632d601424.json')
 
+const serviceAccount = require(process.env.READY_UP_FIREBASE_SERVICE_ACCOUNT_KEY_PATH)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  messagingSenderId: '751484056905'
+  messagingSenderId: process.env.READY_UP_FIREBASE_MESSAGING_SENDER_ID
 })
 
 const pgInterface = {
@@ -35,8 +35,7 @@ const pgInterface = {
 
   async getSession({ id }) {
     const currentTime = new Date()
-    const maxSessionTime = 1000 * 60 * 20 // 20 minutes
-    const cutoffTime = new Date(currentTime - maxSessionTime).toISOString()
+    const cutoffTime = new Date(currentTime - process.env.READY_UP_MAX_SESSION_MS).toISOString()
 
     return await Session.query()
       .eager('user')
@@ -160,10 +159,10 @@ const pgInterface = {
 
         try {
           const response = await admin.messaging().send(message)
-          console.log('Successfully sent message: ', response)
+          console.info('Successfully sent message: ', response)
           return await notification.$query().patch({ sent: true })
         } catch (err) {
-          console.log('Error sending message:', err)
+          console.error('Error sending message:', err)
         }
       }
     })

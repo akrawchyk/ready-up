@@ -8,6 +8,7 @@
   },
   "author": "Andrew Krawchyk",
   "license": "UNLICENSED",
+  "private": true,
   "dependencies": {
     "fastify-plugin": "^1.2.1",
     "objection": "^1.4.0",

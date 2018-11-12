@@ -95,7 +95,7 @@ export default new Vuex.Store({
       try {
         return await readyUpSDK.getLobbyMember(lobbyMemberQuery)
       } catch (err) {
-        console.log(err)
+        console.error(err)
         throw err
       }
     }

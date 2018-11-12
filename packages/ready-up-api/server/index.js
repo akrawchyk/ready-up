@@ -9,6 +9,8 @@ const fastify = require('fastify')({
   }
 })
 
+fastify.register(require('fastify-helmet'))
+
 fastify.register(require('fastify-cors'), {
   // FIXME use something to configure this as cast from csv string
   origin: process.env.READY_UP_ALLOWED_ORIGINS.split(','),
