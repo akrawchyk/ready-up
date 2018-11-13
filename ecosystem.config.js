@@ -32,6 +32,7 @@ module.exports = {
         READY_UP_FIREBASE_MESSAGING_SENDER_ID: '751484056905',
         READY_UP_MAX_SESSION_MS: 1000 * 60 * 20 // 20 minutes
       },
+      // FIXME test env for semaphore https://semaphoreci.com/pizzaboy/ready-up/branches/master/builds/7
       env_production: {
         NODE_ENV: 'production'
       }
