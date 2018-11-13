@@ -1,14 +1,14 @@
 <template>
   <div id="usersShow">
     <ErrorList :errors="errors" />
-    <div>{{ user }}</div>
+    <div>{{ viewingUser }}</div>
   </div>
 </template>
 
 <script>
 import ErrorList from '@/components/ErrorList'
 import { formUtilsMixin } from '@/mixins'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'UsersShow',
@@ -23,9 +23,7 @@ export default {
   },
   mixins: [formUtilsMixin],
   computed: {
-    ...mapState({
-      user: (state) => state.viewingUser
-    }),
+    ...mapGetters(['viewingUser']),
     userQuery() {
       return {
         id: this.$route.params.userId

@@ -1,19 +1,17 @@
 <template>
   <div id="lobbiesShow">
-    <div>{{ lobby }}</div>
+    <div>{{ currentLobby }}</div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'LobbiesShow',
   // TODO build LobbyMembersList
   computed: {
-    ...mapState({
-      lobby: (state) => state.currentLobby
-    })
+    ...mapGetters(['currentLobby'])
   }
 }
 </script>

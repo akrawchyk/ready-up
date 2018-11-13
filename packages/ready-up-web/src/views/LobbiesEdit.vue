@@ -28,7 +28,7 @@
 <script>
 import ErrorList from '@/components/ErrorList'
 import { formUtilsMixin } from '@/mixins'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'LobbiesEdit',
@@ -43,14 +43,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['currentLobby']),
     ...mapState({
       user: (state) => {
         return {
           id: state.currentSession.userId,
           displayName: state.currentSession.displayName
         }
-      },
-      lobby: (state) => state.currentLobby
+      }
     }),
     lobbyParams() {
       return {
@@ -76,7 +76,7 @@ export default {
         this.$router.push({
           name: 'lobbiesShow',
           params: {
-            lobbyId: this.lobby.id
+            lobbyId: this.currentLobby.id
           }
         })
       } catch (error) {

@@ -43,6 +43,47 @@ function lobbyRoutes(fastify, opts, next) {
   )
 
   fastify.get(
+    '/lobbies',
+    {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              lobbies: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    lobbyMembers: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'number' }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      beforeHandler: fastify.auth([fastify.verifyUserSession])
+    },
+    async function queryLobbies(request, reply) {
+      const createdByUserId = request.userSession.userId
+      const lobbies = await fastify.readyUp.queryLobbies({
+        createdByUserId
+      })
+      return { lobbies }
+    }
+  )
+
+  fastify.get(
     '/lobbies/:lobbyId',
     {
       schema: {

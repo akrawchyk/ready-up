@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <h1>Welcome to Ready Up</h1>
-    {{ session }}
-    <p v-if="session">
-      Hello, {{ session.userDisplayName }}!
+    {{ currentSession }}
+    <p v-if="currentSession">
+      Hello, {{ currentSession.userDisplayName }}!
       <router-link to="lobbies/new"> Create a new lobby </router-link>
     </p>
     <p v-else>
@@ -15,14 +15,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
   computed: {
-    ...mapState({
-      session: (state) => state.currentSession
-    })
+    ...mapGetters(['currentSession'])
   }
 }
 </script>

@@ -37,7 +37,7 @@
 <script>
 import ErrorList from '@/components/ErrorList'
 import { formUtilsMixin } from '@/mixins'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -53,9 +53,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      session: (state) => state.currentSession
-    }),
+    ...mapGetters(['currentSession']),
     sessionParams() {
       return {
         userDisplayName: this.user.displayName,
@@ -75,7 +73,7 @@ export default {
         this.reset()
         this.$router.push({
           name: 'lobbiesCreate'
-        })
+          })
       } catch (error) {
         this.setError(error)
       }
@@ -87,7 +85,7 @@ export default {
     try {
       await this.getSession()
 
-      if (this.session) {
+      if (this.currentSession) {
         this.$router.push({
           name: 'lobbiesCreate'
         })

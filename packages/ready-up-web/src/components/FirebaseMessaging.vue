@@ -1,15 +1,15 @@
 <template>
   <div id="firebase-messaging">
-    <div v-if="lastMessage">
-      <img :src="lastMessage.notification.icon" />
-      <div>{{ lastMessage.notification.title }}</div>
-      <div>{{ lastMessage.notification.body }}</div>
-      <div>
-        <form @submit.prevent="onReadyUp()">
-          <button class="btn btn-primary" type="submit">Ready Up</button>
-        </form>
-      </div>
-    </div>
+    <!-- <div v&#45;if="lastMessage"> -->
+    <!--   <img :src="lastMessage.notification.icon" /> -->
+    <!--   <div>{{ lastMessage.notification.title }}</div> -->
+    <!--   <div>{{ lastMessage.notification.body }}</div> -->
+    <!--   <div> -->
+    <!--     <form @submit.prevent="onReadyUp()"> -->
+    <!--       <button class="btn btn&#45;primary" type="submit">Ready Up</button> -->
+    <!--     </form> -->
+    <!--   </div> -->
+    <!-- </div> -->
     <p>FirebaseMessaging log</p>
     <code> {{ log }} </code>
   </div>
@@ -18,7 +18,7 @@
 <script>
 import * as firebase from 'firebase/app'
 import 'firebase/messaging'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'FirebaseMessaging',
@@ -29,9 +29,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      session: (state) => state.currentSession
-    }),
+    ...mapGetters(['currentSession']),
     lastMessage() {
       return this.log[this.log.length - 1]
     },
@@ -39,7 +37,7 @@ export default {
       if (!this.lastMessage) return
       const lobby = JSON.parse(this.lastMessage.data.lobby)
       return lobby.lobbyMembers.find(
-        ({ userId }) => userId == this.session.userId
+        ({ userId }) => userId == this.currentSession.userId
       )
     }
   },
@@ -54,11 +52,11 @@ export default {
     }
   },
   watch: {
-    async session(newSession) {
+    async currentSession(newSession) {
       try {
         await this.messaging.requestPermission()
       } catch (err) {
-        console.log('Unable to get permission to notify.', err)
+        this.log.push('Unable to get permission to notify.', err)
         this.updateUser({ firebaseMessagingToken: '' })
         throw err
       }
@@ -71,7 +69,7 @@ export default {
           // updateUIForPushEnabled(currentToken);
         } else {
           // Show permission request.
-          console.log(
+          this.log.push(
             'No Instance ID token available. Request permission to generate one.'
           )
           // // Show permission UI.
@@ -80,8 +78,8 @@ export default {
           this.updateUser({ firebaseMessagingToken: '' })
         }
       } catch (err) {
-        console.log(err)
-        throw err
+        this.log.push(err)
+        // throw err
       }
     }
   },
@@ -99,14 +97,14 @@ export default {
     this.messaging.onTokenRefresh(async () => {
       try {
         const refreshedToken = await this.messaging.getToken()
-        console.log('Token refreshed.')
+        this.log.push('Token refreshed.')
         // Indicate that the new Instance ID token has not yet been sent to the
         // app server.
         // setTokenSentToServer(false);
         // Send Instance ID token to app server.
         this.updateUser({ firebaseMessagingToken: refreshedToken })
       } catch (err) {
-        console.log('Unable to retrieve refreshed token ', err)
+        this.log.push('Unable to retrieve refreshed token ', err)
         // showToken('Unable to retrieve refreshed token ', err);
       }
     })

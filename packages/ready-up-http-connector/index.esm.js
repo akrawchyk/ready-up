@@ -40,6 +40,10 @@ function readyUpHTTPConnector(sdk, opts) {
       return agent.get(`/lobbies/${id}`)
     },
 
+    async queryLobbies() {
+      return agent.get(`/lobbies`)
+    },
+
     async createLobbyMember({ lobbyId, userId }) {
       return await agent.post(`/lobbyMembers`).send({
         lobbyId,

@@ -4,8 +4,10 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Users from './views/Users.vue'
 import Lobbies from './views/Lobbies.vue'
+import store from './store'
 
 Vue.use(Router)
+
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -57,17 +59,17 @@ const router = new Router({
         {
           path: '/lobbies/new',
           name: 'lobbiesCreate',
-          component: () => import(/* webpackChunkName: "lobbiesEdit" */ './views/LobbiesEdit.vue'),
-          meta: {
-            requiresAuth: true
-          }
+          component: () => import(/* webpackChunkName: "lobbiesEdit" */ './views/LobbiesEdit.vue')
         },
         {
           path: '/lobbies/:lobbyId',
           name: 'lobbiesShow',
           component: () => import(/* webpackChunkName: "lobbiesShow" */ './views/LobbiesShow.vue')
         }
-      ]
+      ],
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
@@ -78,14 +80,12 @@ router.beforeEach((to, from, next) => {
     // if not, redirect to login page.
     // FIXME some way to identify a current session outside of vuex
     // could use local storage to set the last logged in timestamp, we have http only cookies
-    if (!this.currentSession) {
-      console.log('uh oh, no session!')
+    if (!store.getters.currentSession) {
       next({
         path: '/login',
         query: { redirect: to.fullPath },
         replace: true
       })
-      console.log('return')
       return
     }
   }

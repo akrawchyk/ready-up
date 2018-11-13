@@ -13,11 +13,18 @@
 
 <script>
 import FirebaseMessaging from '@/components/FirebaseMessaging'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
   components: {
     FirebaseMessaging
+  },
+  methods: {
+    ...mapActions(['getSession'])
+  },
+  async beforeMount () {
+    await this.getSession()
   }
 }
 </script>

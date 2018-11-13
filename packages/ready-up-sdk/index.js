@@ -11,8 +11,6 @@ class NotAuthorizedError extends Error {
 }
 
 const abstractInterface = {
-  // BaseModel: {}, // for pg-connector only so far
-
   async createSession() {
     return Promise.reject(new NotImplementedError())
   },
@@ -32,6 +30,9 @@ const abstractInterface = {
     return Promise.reject(new NotImplementedError())
   },
   async getLobby() {
+    return Promise.reject(new NotImplementedError())
+  },
+  async queryLobbies() {
     return Promise.reject(new NotImplementedError())
   },
   async createLobbyMember() {

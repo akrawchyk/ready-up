@@ -15,7 +15,8 @@ export default new Vuex.Store({
   state: {
     currentSession: null,
     viewingUser: null,
-    currentLobby: null
+    currentLobby: null,
+    lobbies: []
   },
   mutations: {
     setCurrentSession(state, session) {
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     },
     setCurrentLobby(state, lobby) {
       state.currentLobby = lobby
+    },
+    setLobbies(state, lobbies) {
+      state.lobbies = lobbies
     }
   },
   actions: {
@@ -79,6 +83,15 @@ export default new Vuex.Store({
         throw err
       }
     },
+    async queryLobbies({ commit }) {
+      try {
+        const lobbies = await readyUpSDK.queryLobbies()
+        console.log(lobbies)
+        commit('setLobbies', lobbies.body)
+      } catch (err) {
+        throw err
+      }
+    },
     async updateLobbyMember({ dispatch, commit }, { id, ready }) {
       try {
         // TODO set the lobby member's status
@@ -93,11 +106,26 @@ export default new Vuex.Store({
     // FIXME should this be query? we want to get 4 calls or so...
     async getLobbyMember({ dispatch, commit }, lobbyMemberQuery) {
       try {
+        // FIXME do we need to use the result.body?
         return await readyUpSDK.getLobbyMember(lobbyMemberQuery)
       } catch (err) {
         console.error(err)
         throw err
       }
+    }
+  },
+  getters: {
+    currentSession(state) {
+      return state.currentSession
+    },
+    currentLobby(state) {
+      return state.currentLobby
+    },
+    viewingUser(state) {
+      return state.viewingUser
+    },
+    lobbies(state) {
+      return state.lobbies
     }
   }
 })

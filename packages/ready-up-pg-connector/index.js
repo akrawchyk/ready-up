@@ -12,8 +12,6 @@ admin.initializeApp({
 })
 
 const pgInterface = {
-  BaseModel,
-
   async createSession({ userDisplayName, userPassword }) {
     const user = await User.query()
       .findOne({ displayName: userDisplayName })
@@ -33,11 +31,11 @@ const pgInterface = {
     }
   },
 
-  async getSession({ id }) {
+  getSession({ id }) {
     const currentTime = new Date()
     const cutoffTime = new Date(currentTime - process.env.READY_UP_MAX_SESSION_MS).toISOString()
 
-    return await Session.query()
+    return Session.query()
       .eager('user')
       .findOne({ id })
       .andWhere('createdAt', '>', cutoffTime)
@@ -53,21 +51,21 @@ const pgInterface = {
   async createUser({ displayName, password }) {
     const hashedPassword = await argon2.hash(password)
 
-    return await User.query()
+    return User.query()
       .returning(User.visibleFields)
       .insert({ displayName, hashedPassword })
   },
 
-  async updateUser({ id, firebaseMessagingToken }) {
-    return await User.query()
+  updateUser({ id, firebaseMessagingToken }) {
+    return User.query()
       .where({ id })
       .patch({ firebaseMessagingToken })
       .returning(User.visibleFields)
       .throwIfNotFound()
   },
 
-  async getUser({ id }) {
-    return await User.query()
+  getUser({ id }) {
+    return User.query()
       .returning(User.visibleFields)
       .findById(id)
       .throwIfNotFound()
@@ -160,7 +158,7 @@ const pgInterface = {
         try {
           const response = await admin.messaging().send(message)
           console.info('Successfully sent message: ', response)
-          return await notification.$query().patch({ sent: true })
+          return notification.$query().patch({ sent: true })
         } catch (err) {
           console.error('Error sending message:', err)
         }
@@ -172,38 +170,46 @@ const pgInterface = {
     return newLobby
   },
 
-  async getLobby({ id }) {
-    return await Lobby.query()
+  getLobby({ id }) {
+    return Lobby.query()
       .eager('lobbyMembers')
       .findById(id)
       .throwIfNotFound()
   },
 
-  async createLobbyMember({ lobbyId, userId }) {
-    return await LobbyMember.query().insert({ lobbyId, userId })
+  queryLobbies({ createdByUserId }) {
+    console.log('CREATED BY USER ID', createdByUserId)
+    return Lobby.query()
+      .where('createdByUserId', createdByUserId)
+      .eager('lobbyMembers')
+      .orderBy('createdAt', 'DESC')
   },
 
-  async updateLobbyMember({ id, ready }) {
-    return await LobbyMember.query()
+  createLobbyMember({ lobbyId, userId }) {
+    return LobbyMember.query().insert({ lobbyId, userId })
+  },
+
+  updateLobbyMember({ id, ready }) {
+    return LobbyMember.query()
       .where({ id })
       .patch({ ready })
       .throwIfNotFound()
   },
 
-  async getLobbyMember({ id }) {
-    return await LobbyMember.query()
+  getLobbyMember({ id }) {
+    return LobbyMember.query()
       .findById(id)
       .throwIfNotFound()
   },
 
-  async createNotification({ createdByUserId }) {
-    return await Notification.query()
+  createNotification({ createdByUserId }) {
+    return Notification.query()
       .insert({ createdByUserId })
       .returning(['id', 'sent', 'createdByUserId'])
   },
 
-  async getNotification({ id }) {
-    return await Notification.query()
+  getNotification({ id }) {
+    return Notification.query()
       .findById(id)
       .throwIfNotFound()
   }
@@ -235,14 +241,12 @@ function readyUpPgConnector(sdk, opts) {
     }
     return Object.assign(impl, {
       [fnName]: new Proxy(sdk[fnName], {
-        apply: async function(target, thisArg, argumentsList) {
-          return await pgInterface[fnName](...argumentsList)
+        apply: function(target, thisArg, argumentsList) {
+          return pgInterface[fnName](...argumentsList)
         }
       })
     })
   }, {})
-
-  Object.assign(implementation, { BaseModel })
 
   return implementation
 }
