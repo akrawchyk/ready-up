@@ -5,14 +5,13 @@ module.exports = {
       script: 'packages/ready-up-api/index.js',
       cwd: 'packages/ready-up-api',
 
-      // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
       instances: 1,
       autorestart: true,
       watch: [
-        'packages/fastify-ready-up/**',
-        'packages/ready-up-api/**',
-        'packages/ready-up-pg-connector/**',
-        'packages/ready-up-sdk/**'
+        './**/*.js',
+        '../fastify-ready-up/**/*.js',
+        '../ready-up-pg-connector/**/*.js',
+        '../ready-up-sdk/**/.js'
       ],
       ignore_watch: '**/node_modules/**',
       max_memory_restart: '1G',
@@ -45,7 +44,7 @@ module.exports = {
 
       instances: 1,
       autorestart: true,
-      watch: ['packages/ready-up-web/dist/**'],
+      watch: ['./dist/**'],
       env: {
         READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
         READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key'

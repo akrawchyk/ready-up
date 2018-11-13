@@ -76,10 +76,6 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    // FIXME some way to identify a current session outside of vuex
-    // could use local storage to set the last logged in timestamp, we have http only cookies
     if (!store.getters.currentSession) {
       next({
         path: '/login',
