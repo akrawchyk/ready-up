@@ -85,9 +85,8 @@ export default new Vuex.Store({
     },
     async queryLobbies({ commit }) {
       try {
-        const lobbies = await readyUpSDK.queryLobbies()
-        console.log(lobbies)
-        commit('setLobbies', lobbies.body)
+        const { body }= await readyUpSDK.queryLobbies()
+        commit('setLobbies', body.lobbies)
       } catch (err) {
         throw err
       }

@@ -56,12 +56,21 @@ function lobbyRoutes(fastify, opts, next) {
                   type: 'object',
                   properties: {
                     id: { type: 'number' },
+                    displayName: { type: 'string' },
                     lobbyMembers: {
                       type: 'array',
                       items: {
                         type: 'object',
                         properties: {
-                          id: { type: 'number' }
+                          id: { type: 'number' },
+                          ready: { type: 'boolean' },
+                          user: {
+                            type: 'object',
+                            properties: {
+                              id: { type: 'number' },
+                              displayName: { type: 'string' }
+                            }
+                          }
                         }
                       }
                     }
@@ -79,6 +88,7 @@ function lobbyRoutes(fastify, opts, next) {
       const lobbies = await fastify.readyUp.queryLobbies({
         createdByUserId
       })
+      lobbies.forEach(l => l.lobbyMembers.forEach(console.log))
       return { lobbies }
     }
   )

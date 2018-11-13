@@ -172,16 +172,16 @@ const pgInterface = {
 
   getLobby({ id }) {
     return Lobby.query()
-      .eager('lobbyMembers')
+      .eager(['lobbyMembers', 'lobbyMembers.user'])
       .findById(id)
       .throwIfNotFound()
   },
 
   queryLobbies({ createdByUserId }) {
-    console.log('CREATED BY USER ID', createdByUserId)
     return Lobby.query()
       .where('createdByUserId', createdByUserId)
       .eager('lobbyMembers')
+      .mergeEager('lobbyMembers.user')
       .orderBy('createdAt', 'DESC')
   },
 
