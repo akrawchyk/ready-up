@@ -88,7 +88,6 @@ function lobbyRoutes(fastify, opts, next) {
       const lobbies = await fastify.readyUp.queryLobbies({
         createdByUserId
       })
-      lobbies.forEach(l => l.lobbyMembers.forEach(console.log))
       return { lobbies }
     }
   )
