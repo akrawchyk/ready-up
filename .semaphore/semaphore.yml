@@ -1,13 +1,15 @@
 blocks:
-  - name: Setup
+  - name: Bootstrap
     task:
+      prologue:
+        commands:
+          - sem-service start postgres
       jobs:
-        - name: Install
+        - name: Setup
           commands:
             - npm ci
             - npx lerna bootstrap
-            - change-pg-version 10
-            - createdb ready-up -U $DATABASE_POSTGRESQL_USERNAME
+            - createdb -U postgres -h 0.0.0.0 ready-up
             - cd packages/ready-up-pg-connector; npx knex migrate:latest
             - npx pm2 start ecosystem.config.js
   - name: Healthcheck
