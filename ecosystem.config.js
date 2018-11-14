@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'ready-up-api',
-      script: 'packages/ready-up-api/index.js',
-      cwd: 'packages/ready-up-api',
+      script: './packages/ready-up-api/index.js',
+      cwd: './packages/ready-up-api',
 
       instances: 1,
       autorestart: true,
@@ -32,7 +32,7 @@ module.exports = {
         READY_UP_FIREBASE_MESSAGING_SENDER_ID: '751484056905',
         READY_UP_MAX_SESSION_MS: 1000 * 60 * 20 // 20 minutes
       },
-      // FIXME test env for semaphore https://semaphoreci.com/pizzaboy/ready-up/branches/master/builds/7
+
       env_production: {
         NODE_ENV: 'production'
       }
@@ -40,8 +40,8 @@ module.exports = {
 
     {
       name: 'ready-up-web',
-      cwd: 'packages/ready-up-web/dist',
-      script: 'packages/ready-up-web/bin/server',
+      cwd: './packages/ready-up-web/dist',
+      script: './packages/ready-up-web/bin/server',
 
       instances: 1,
       autorestart: true,

@@ -1,0 +1,27 @@
+blocks:
+  - name: Setup
+    task:
+      jobs:
+        - name: Install
+          commands:
+            - npm ci
+            - npx lerna bootstrap
+            - change-pg-version 10
+            - createdb ready-up -U $DATABASE_POSTGRESQL_USERNAME
+            - cd packages/ready-up-pg-connector; npx knex migrate:latest
+            - npx pm2 start ecosystem.config.js
+  - name: Healthcheck
+    task:
+      jobs:
+        - name: API
+          commands:
+            - npx pm2 show ready-up-api > /dev/null
+        - name: Web
+          commands:
+            - npx pm2 show ready-up-web > /dev/null
+  - name: API Tests
+    task:
+      jobs:
+        - name: Load tests
+          commands:
+            - cd packages/ready-up-api; TEST_URL=http://localhost:3000 npm run test
