@@ -2,14 +2,18 @@
 
 const LocalWebServer = require('local-web-server')
 const localWebServer = new LocalWebServer()
-const server = localWebServer.listen({
+const opts = {
   port: 8000,
   directory: '.',
-  spa: 'index.html',
-  https: true,
-  cert: process.env.READY_UP_SSL_CERT_PATH,
-  key: process.env.READY_UP_SSL_KEY_PATH
-})
+  spa: 'index.html'
+}
+
+if (process.env.READY_UP_SSL_CERT_PATH && process.env.READY_UP_SSL_KEY_PATH) {
+  opts.https = true
+  opts.cert = process.env.READY_UP_SSL_CERT_PATH
+  opts.key = process.env.READY_UP_SSL_KEY_PATH
+}
+const server = localWebServer.listen(opts)
 // secure, SPA server with listening websocket now ready on port 8000
 
 process.on('SIGINT', () => {

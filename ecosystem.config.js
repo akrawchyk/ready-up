@@ -17,6 +17,9 @@ module.exports = {
       max_memory_restart: '1G',
       env: {
         NODE_ENV: 'development',
+      },
+
+      env_development: {
         DEBUG: 'knex:query',
         READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
         READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key',
@@ -46,7 +49,7 @@ module.exports = {
       instances: 1,
       autorestart: true,
       watch: ['./dist/**'],
-      env: {
+      env_development: {
         READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
         READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key'
       }
