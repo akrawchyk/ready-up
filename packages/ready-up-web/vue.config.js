@@ -6,7 +6,6 @@ const config = {
   pwa: {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      dontCacheBustUrlsMatching: /\.\w{8}\./,
       importWorkboxFrom: 'local',
       swSrc: 'src/firebase-messaging-sw.js'
     }

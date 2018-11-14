@@ -1,13 +1,18 @@
 const { join } = require('path')
 const { readFileSync } = require('fs')
 
-const fastify = require('fastify')({
-  logger: true,
-  https: {
+const opts = {
+  logger: true
+}
+
+if (process.env.READY_UP_SSL_CERT_PATH && process.env.READY_UP_SSL_KEY_PATH) {
+  opts.https = {
     cert: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
     key: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
   }
-})
+}
+
+const fastify = require('fastify')(opts)
 
 fastify.register(require('fastify-helmet'))
 
