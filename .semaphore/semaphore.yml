@@ -13,8 +13,6 @@ blocks:
             - cd packages/ready-up-pg-connector; npx knex migrate:latest
             - npx pm2 start ecosystem.config.js
       env_vars:
-        - name: NODE_ENV
-          value: test
         - name: READY_UP_MAX_SESSION_MS
           value: 600000
         - name: READY_UP_SESSION_SECRET_KEY_PATH

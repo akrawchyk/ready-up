@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'ready-up-api',
-      script: './packages/ready-up-api/index.js',
       cwd: './packages/ready-up-api',
+      script: 'index.js',
 
       instances: 1,
       autorestart: true,
@@ -41,7 +41,7 @@ module.exports = {
     {
       name: 'ready-up-web',
       cwd: './packages/ready-up-web/dist',
-      script: './packages/ready-up-web/bin/server',
+      script: '../bin/server',
 
       instances: 1,
       autorestart: true,
