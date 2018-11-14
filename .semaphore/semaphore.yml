@@ -12,6 +12,17 @@ blocks:
             - createdb -U postgres -h 0.0.0.0 ready-up
             - cd packages/ready-up-pg-connector; npx knex migrate:latest
             - npx pm2 start ecosystem.config.js
+      env_vars:
+        - name: READY_UP_MAX_SESSION_MS
+          value: 600000
+        - name: READY_UP_SESSION_SECRET_KEY_PATH
+          value:: /home/runner/tmp/ready-up-session-secret-key
+        - name: READY_UP_PG_CONNECTION_STRING
+          value: postgresql://runner:semaphoredb@localhost/ready-up
+        - name: READY_UP_LISTEN_PORT
+          value: 3000
+        - name: READY_UP_LISTEN_ADDRESS
+          value: localhost
   - name: Healthcheck
     task:
       jobs:
@@ -26,4 +37,7 @@ blocks:
       jobs:
         - name: Load tests
           commands:
-            - cd packages/ready-up-api; TEST_URL=http://localhost:3000 npm run test
+            - cd packages/ready-up-api; npm run test
+          env_vars:
+            - name: TEST_URL
+              value: http://localhost:3000

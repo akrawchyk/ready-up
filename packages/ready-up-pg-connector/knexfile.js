@@ -1,7 +1,7 @@
 module.exports = {
   development: {
     client: 'postgresql',
-    connection: 'postgresql://postgres@localhost/ready-up',
+    connection: process.env.READY_UP_PG_CONNECTION_STRING,
     migrations: {
       tableName: 'readyUpMigrations'
     }

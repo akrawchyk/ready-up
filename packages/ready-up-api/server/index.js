@@ -13,7 +13,7 @@ fastify.register(require('fastify-helmet'))
 
 fastify.register(require('fastify-cors'), {
   // FIXME use something to configure this as cast from csv string
-  origin: process.env.READY_UP_ALLOWED_ORIGINS.split(','),
+  origin: (process.env.READY_UP_ALLOWED_ORIGINS || 'localhost').split(','),
   credentials: true
 })
 fastify.register(require('fastify-secure-session'), {
