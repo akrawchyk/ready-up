@@ -5,7 +5,9 @@ const opts = {
   logger: true
 }
 
-if (process.env.READY_UP_SSL_CERT_PATH && process.env.READY_UP_SSL_KEY_PATH) {
+const hasSsl = !!(process.env.READY_UP_SSL_CERT_PATH && process.env.READY_UP_SSL_KEY_PATH)
+
+if (hasSsl) {
   opts.https = {
     cert: readFileSync(process.env.READY_UP_SSL_CERT_PATH),
     key: readFileSync(process.env.READY_UP_SSL_KEY_PATH)
@@ -25,7 +27,7 @@ fastify.register(require('fastify-secure-session'), {
   key: readFileSync(process.env.READY_UP_SESSION_SECRET_KEY_PATH),
   cookie: {
     httpOnly: true,
-    secure: true
+    secure: hasSsl
   }
 })
 fastify.register(require('fastify-auth'))

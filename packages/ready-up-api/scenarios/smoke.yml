@@ -3,7 +3,7 @@ config:
   processor: './helpers/users.js'
   phases:
     - duration: 30
-      arrivalRate: 20
+      arrivalRate: 2
   plugins:
     expect: {}
   http:
