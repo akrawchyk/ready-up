@@ -3,7 +3,7 @@
     <h1>Welcome to Ready Up</h1>
     {{ currentSession }}
     <p v-if="currentSession">
-      Hello, {{ currentSession.userDisplayName }}!
+      Hello, {{ currentSession.user.displayName }}!
       <router-link to="lobbies/new"> Create a new lobby </router-link>
     </p>
     <p v-else>

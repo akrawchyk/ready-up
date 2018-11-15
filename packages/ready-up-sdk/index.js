@@ -1,54 +1,50 @@
-class NotImplementedError extends Error {
-  constructor() {
-    super('Not Implemented')
-  }
+function NotImplementedError() {
+  Error.captureStackTrace(this, NotImplementedError)
 }
 
-class NotAuthorizedError extends Error {
-  constructor() {
-    super('Not Authorized')
-  }
+function NotAuthorizedError () {
+  Error.captureStackTrace(this, NotAuthorizedError)
 }
 
 const abstractInterface = {
-  async createSession() {
-    return Promise.reject(new NotImplementedError())
+  createSession() {
+    throw new NotImplementedError()
   },
-  async getSession() {
-    return Promise.reject(new NotImplementedError())
+  getSession() {
+    throw new NotImplementedError()
   },
-  async createUser() {
-    return Promise.reject(new NotImplementedError())
+  createUser() {
+    throw new NotImplementedError()
   },
-  async updateUser() {
-    return Promise.reject(new NotImplementedError())
+  updateUser() {
+    throw new NotImplementedError()
   },
-  async getUser() {
-    return Promise.reject(new NotImplementedError())
+  getUser() {
+    throw new NotImplementedError()
   },
-  async createLobby() {
-    return Promise.reject(new NotImplementedError())
+  createLobby() {
+    throw new NotImplementedError()
   },
-  async getLobby() {
-    return Promise.reject(new NotImplementedError())
+  getLobby() {
+    throw new NotImplementedError()
   },
-  async queryLobbies() {
-    return Promise.reject(new NotImplementedError())
+  queryLobbies() {
+    throw new NotImplementedError()
   },
-  async createLobbyMember() {
-    return Promise.reject(new NotImplementedError())
+  createLobbyMember() {
+    throw new NotImplementedError()
   },
-  async getLobbyMember() {
-    return Promise.reject(new NotImplementedError())
+  getLobbyMember() {
+    throw new NotImplementedError()
   },
-  async updateLobbyMember() {
-    return Promise.reject(new NotImplementedError())
+  updateLobbyMember() {
+    throw new NotImplementedError()
   },
-  async createNotification() {
-    return Promise.reject(new NotImplementedError())
+  createNotification() {
+    throw new NotImplementedError()
   },
-  async getNotification() {
-    return Promise.reject(new NotImplementedError())
+  getNotification() {
+    throw new NotImplementedError()
   }
 }
 

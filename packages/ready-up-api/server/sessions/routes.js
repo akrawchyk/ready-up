@@ -21,8 +21,13 @@ function sessionRoutes(fastify, opts, next) {
           201: {
             type: 'object',
             properties: {
-              userId: { type: 'number' },
-              userDisplayName: { type: 'string' }
+              user: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number' },
+                  displayName: { type: 'string' }
+                }
+              }
             }
           }
         }
@@ -56,8 +61,13 @@ function sessionRoutes(fastify, opts, next) {
             200: {
               type: 'object',
               properties: {
-                userId: { type: 'string' },
-                userDisplayName: { type: 'string' }
+                user: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    displayName: { type: 'string' }
+                  }
+                }
               }
             }
           }

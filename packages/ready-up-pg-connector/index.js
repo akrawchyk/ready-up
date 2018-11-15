@@ -26,8 +26,11 @@ const pgInterface = {
 
     return {
       id: session.id,
-      userId: user.id,
-      userDisplayName: user.displayName
+      user: {
+        // FIXME how to filter for visibleFields
+        id: user.id,
+        displayName: user.displayName
+      }
     }
   },
 
@@ -42,8 +45,10 @@ const pgInterface = {
       .throwIfNotFound()
       .then((session) => {
         return {
-          userId: session.user.id,
-          userDisplayName: session.user.displayName
+          user: {
+            id: session.user.id,
+            displayName: session.user.displayName
+          }
         }
       })
   },
@@ -233,22 +238,18 @@ function readyUpPgConnector(sdk, opts) {
 
   BaseModel.knex(knex)
 
-  const implementation = Object.keys(sdk).reduce((impl, fnName) => {
-    if (typeof pgInterface[fnName] !== 'function') {
-      return Object.assign(impl, {
-        [fnName]: sdk[fnName]
-      })
-    }
+  return Object.keys(sdk).reduce((impl, fnName) => {
     return Object.assign(impl, {
       [fnName]: new Proxy(sdk[fnName], {
         apply: function(target, thisArg, argumentsList) {
+          if (typeof pgInterface[fnName] !== 'function') {
+            return Reflect.apply(target, thisArg, argumentsList)
+          }
           return pgInterface[fnName](...argumentsList)
         }
       })
     })
   }, {})
-
-  return implementation
 }
 
 module.exports = readyUpPgConnector

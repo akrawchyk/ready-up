@@ -9,67 +9,65 @@ function readyUpHTTPConnector(sdk, opts) {
     .set('accept', 'json')
 
   const httpInterface = {
-    async createSession({ userDisplayName, userPassword }) {
-      return await agent.post(`/sessions`).send({ userDisplayName, userPassword })
+    createSession({ userDisplayName, userPassword }) {
+      return agent.post(`/sessions`).send({ userDisplayName, userPassword })
     },
 
-    async getSession() {
-      return await agent.get(`/sessions`)
+    getSession() {
+      return agent.get(`/sessions`)
     },
 
-    async createUser({ displayName, password }) {
-      return await agent.post(`/users`).send({ displayName, password })
+    createUser({ displayName, password }) {
+      return agent.post(`/users`).send({ displayName, password })
     },
 
-    async updateUser({ id, firebaseMessagingToken }) {
-      return await agent.patch(`/users/${id}`).send({ firebaseMessagingToken })
+    updateUser({ id, firebaseMessagingToken }) {
+      return agent.patch(`/users/${id}`).send({ firebaseMessagingToken })
     },
 
-    async getUser({ id }) {
-      return await agent.get(`/users/${id}`)
+    getUser({ id }) {
+      return agent.get(`/users/${id}`)
     },
 
-    async createLobby({ createdByUserId, displayName }) {
-      return await agent.post(`/lobbies`).send({
+    createLobby({ createdByUserId, displayName }) {
+      return agent.post(`/lobbies`).send({
         createdByUserId,
         displayName
       })
     },
 
-    async getLobby({ id }) {
+    getLobby({ id }) {
       return agent.get(`/lobbies/${id}`)
     },
 
-    async queryLobbies() {
+    queryLobbies() {
       return agent.get(`/lobbies`)
     },
 
-    async createLobbyMember({ lobbyId, userId }) {
-      return await agent.post(`/lobbyMembers`).send({
+    createLobbyMember({ lobbyId, userId }) {
+      return agent.post(`/lobbyMembers`).send({
         lobbyId,
         userId
       })
     },
 
-    async getLobbyMember({ id }) {
-      return await agent.get(`/lobbyMembers/${id}`)
+    getLobbyMember({ id }) {
+      return agent.get(`/lobbyMembers/${id}`)
     },
 
-    async updateLobbyMember({ id, ready }) {
-      return await agent.patch(`/lobbyMembers/${id}`).send({ ready })
+    updateLobbyMember({ id, ready }) {
+      return agent.patch(`/lobbyMembers/${id}`).send({ ready })
     }
   }
 
   return Object.keys(sdk).reduce((impl, fnName) => {
-    if (typeof httpInterface[fnName] !== 'function') {
-      return Object.assign(impl, {
-        [fnName]: sdk[fnName]
-      })
-    }
     return Object.assign(impl, {
       [fnName]: new Proxy(sdk[fnName], {
-        apply: async function(target, thisArg, argumentsList) {
-          return await httpInterface[fnName](...argumentsList)
+        apply: function(target, thisArg, argumentsList) {
+          if (typeof httpInterface[fnName] !== 'function') {
+            return Reflect.apply(target, thisArg, argumentsList)
+          }
+          return httpInterface[fnName](...argumentsList)
         }
       })
     })

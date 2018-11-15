@@ -86,6 +86,7 @@ export default {
       await this.getSession()
 
       if (this.currentSession) {
+        // FIXME if redirect, go to redirect
         this.$router.push({
           name: 'lobbiesCreate'
         })
