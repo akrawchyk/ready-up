@@ -72,10 +72,10 @@ function sessionRoutes(fastify, opts, next) {
             }
           }
         },
-        beforeHandler: fastify.auth([fastify.verifyUserSession])
+        beforeHandler: fastify.auth([fastify.verifyCurrentSession])
       },
       async function getSession(request, reply) {
-        return request.userSession
+        return request.currentSession
       }
     )
 

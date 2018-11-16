@@ -29,7 +29,7 @@ function lobbyMemberRoutes(fastify, opts, next) {
           }
         }
       },
-      beforeHandler: fastify.auth([fastify.verifyUserSession])
+      beforeHandler: fastify.auth([fastify.verifyCurrentSession])
     },
     async function createLobbyMember(request, reply) {
       const { lobbyId, userId } = request.body
@@ -42,7 +42,7 @@ function lobbyMemberRoutes(fastify, opts, next) {
         return error
       }
 
-      const createdByUserId = request.userSession.userId
+      const createdByUserId = request.currentSession.user.id
       const newLobbyMember = await fastify.readyUp.createLobbyMember({
         lobbyId,
         userId,

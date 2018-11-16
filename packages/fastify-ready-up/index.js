@@ -8,6 +8,7 @@ const {
 } = require('objection-db-errors')
 const pgConnector = require('ready-up-pg-connector')
 const ReadyUpSDK = require('ready-up-sdk')
+const notifier = require('ready-up-notifier')
 
 function fastifyReadyUp(fastify, opts, next) {
   try {
@@ -20,16 +21,17 @@ function fastifyReadyUp(fastify, opts, next) {
   }
 
   fastify.decorate('readyUp', readyUpSDK)
-  fastify.decorateRequest('userSession', null)
-  fastify.decorate('verifyUserSession', async function(request, reply, done) {
+  fastify.decorate('notifier', notifier)
+  fastify.decorateRequest('currentSession', null)
+  fastify.decorate('verifyCurrentSession', async function(request, reply, done) {
     try {
       const sessionId = request.session.get('sessionId')
       if (!sessionId) {
         throw new Error('No sessionId found')
       }
 
-      const userSession = await readyUpSDK.getSession({ id: sessionId })
-      request.userSession = userSession
+      const currentSession = await readyUpSDK.getSession({ id: sessionId })
+      request.currentSession = currentSession
 
       done()
     } catch (err) {
@@ -62,7 +64,9 @@ function fastifyReadyUp(fastify, opts, next) {
       retError.message = 'Conflict'
       return retError
     } else if (err instanceof DBError) {
-      return err
+      reply.code(500)
+      retError.message = 'Internal Server Error'
+      return retError
     } else if (err instanceof ReadyUpSDK.NotImplementedError) {
       reply.code(501)
       return err

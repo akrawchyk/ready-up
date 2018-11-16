@@ -18,17 +18,16 @@ function notificationRoutes(fastify, opts, next) {
             type: 'object',
             properties: {
               id: { type: 'number' },
-              createdByUserId: { type: 'number' },
-              sent: { type: 'boolean' }
+              createdByUserId: { type: 'number' }
             }
           }
         }
       },
-      beforeHandler: fastify.auth([fastify.verifyUserSession])
+      beforeHandler: fastify.auth([fastify.verifyCurrentSession])
     },
     async function createNotification(request, reply) {
       const { content } = request.body
-      const createdByUserId = request.userSession.userId
+      const createdByUserId = request.currentSession.user.id
       const newNotification = await fastify.readyUp.createNotification({
         createdByUserId
       })
@@ -48,8 +47,7 @@ function notificationRoutes(fastify, opts, next) {
           200: {
             type: 'object',
             properties: {
-              id: { type: 'number' },
-              sent: { type: 'boolean' }
+              id: { type: 'number' }
             }
           }
         }

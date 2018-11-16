@@ -10,6 +10,7 @@ module.exports = {
       watch: [
         './**/*.js',
         '../fastify-ready-up/**/*.js',
+        '../fastify-notifier/**/*.js',
         '../ready-up-pg-connector/**/*.js',
         '../ready-up-sdk/**/.js'
       ],

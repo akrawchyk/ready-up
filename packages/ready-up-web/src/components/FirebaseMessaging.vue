@@ -37,7 +37,7 @@ export default {
       if (!this.lastMessage) return
       const lobby = JSON.parse(this.lastMessage.data.lobby)
       return lobby.lobbyMembers.find(
-        ({ userId }) => userId == this.currentSession.userId
+        ({ userId }) => userId == this.currentSession.user.id
       )
     }
   },

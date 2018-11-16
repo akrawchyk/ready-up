@@ -59,7 +59,7 @@ function userRoutes(fastify, opts, next) {
           firebaseMessagingToken: { type: 'string' }
         }
       },
-      beforeHandler: fastify.auth([fastify.verifyUserSession])
+      beforeHandler: fastify.auth([fastify.verifyCurrentSession])
     },
     async function updateUser(request, reply) {
       let { firebaseMessagingToken } = request.body
@@ -68,7 +68,7 @@ function userRoutes(fastify, opts, next) {
         firebaseMessagingToken = ''
       }
 
-      const userId = request.userSession.userId
+      const userId = request.currentSession.user.id
       await fastify.readyUp.updateUser({ id: userId, firebaseMessagingToken })
       reply.code(204)
       return

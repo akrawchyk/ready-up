@@ -1,15 +1,8 @@
 const Knex = require('knex')
 const { transaction } = require('objection')
 const argon2 = require('@phc/argon2')
-const admin = require('firebase-admin')
 const { NotAuthorizedError } = require('ready-up-sdk')
 const { BaseModel, User, Lobby, LobbyMember, Notification, Session } = require('./models')
-
-const serviceAccount = require(process.env.READY_UP_FIREBASE_SERVICE_ACCOUNT_KEY_PATH)
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  messagingSenderId: process.env.READY_UP_FIREBASE_MESSAGING_SENDER_ID
-})
 
 const pgInterface = {
   async createSession({ userDisplayName, userPassword }) {
@@ -79,16 +72,18 @@ const pgInterface = {
   async createLobby({ createdByUserId, displayName }) {
     const knex = Notification.knex()
     let trx
-    let newLobby
-    let notifications
 
     try {
       trx = await transaction.start(knex)
 
+      // TODO should we move this to the client? create multiple lobbyMembers there?
+      // e.g. Promise.all([createLobbyMember(), createLobbyMember()])
       const invitees = await User.query()
         // FIXME query friends
         // FIXME query user allowed permission
+        .whereNotNull('firebaseMessagingToken')
         .limit(4)
+        // .whereIn('id', [1, 2, 3])
         .pluck('id')
         .then((userIds) =>
           userIds.map((id) => {
@@ -100,7 +95,9 @@ const pgInterface = {
           })
         )
 
-      newLobby = await Lobby.query()
+      console.log(invitees)
+
+      const newLobby = await Lobby.query()
         .insertGraphAndFetch([
           {
             '#id': 'newLobby',
@@ -111,68 +108,13 @@ const pgInterface = {
         ])
         .then((graph) => graph[0])
 
-      const recipients = newLobby.lobbyMembers.filter(
-        (lobbyMember) => lobbyMember.userId !== createdByUserId
-      )
-
-      notifications = await Notification.query()
-        .eager('recipient')
-        .insert(
-          recipients.map((lobbyMember) => {
-            return {
-              recipientUserId: lobbyMember.userId,
-              createdByUserId
-            }
-          })
-        )
-
       await trx.commit()
+
+      return newLobby
     } catch (err) {
       await trx.rollback()
       throw err
     }
-
-    // FIXME move to background job that looks for notification records that are not "sent"
-    // FIXME make a separate notification module
-    const outbox = notifications.map((notification) => {
-      // FIXME skip if no recipient token?
-      return async function sendNotification() {
-        if (!notification.recipient.firebaseMessagingToken) {
-          // dont send to users that aren't accepting notifications
-          return Promise.resolve()
-        }
-
-        const title = newLobby.displayName || `New Lobby ${newLobby.id}`
-        const body = `Ready up with ${newLobby.lobbyMembers.length} others!`
-        const message = {
-          // TODO lobby presenter for notifications (max 4KB)
-          data: { lobby: JSON.stringify(newLobby) },
-          // https://firebase.google.com/docs/cloud-messaging/admin/send-messages#defining_the_message
-          webpush: {
-            notification: {
-              title,
-              body,
-              // icon: 'https://ready-up.test:8000/img/icons/android-chrome-192x192.png'
-              icon: 'https://ready-up.test:8080/img/icons/android-chrome-192x192.png'
-            }
-          },
-          // FIXME add Device model, this only sends notifications to the last-used device
-          token: notification.recipient.firebaseMessagingToken
-        }
-
-        try {
-          const response = await admin.messaging().send(message)
-          console.info('Successfully sent message: ', response)
-          return notification.$query().patch({ sent: true })
-        } catch (err) {
-          console.error('Error sending message:', err)
-        }
-      }
-    })
-
-    await Promise.all(outbox.map((send) => send()))
-
-    return newLobby
   },
 
   getLobby({ id }) {
@@ -207,14 +149,35 @@ const pgInterface = {
       .throwIfNotFound()
   },
 
-  createNotification({ createdByUserId }) {
+  createNotification({ createdByUserId, recipientUserId }) {
     return Notification.query()
-      .insert({ createdByUserId })
-      .returning(['id', 'sent', 'createdByUserId'])
+      .eager('recipient')
+      .insert({
+        createdByUserId,
+        recipientUserId
+      })
+  },
+
+  batchCreateNotifications(recipients = []) {
+    if (recipients.length === 0) {
+      return
+    }
+
+    return Notification.query()
+      .eager('recipient')
+      .insert(
+        recipients.map(({ recipientUserId, createdByUserId }) => {
+          return {
+            recipientUserId,
+            createdByUserId
+          }
+        })
+      )
   },
 
   getNotification({ id }) {
     return Notification.query()
+      .eager('recipient')
       .findById(id)
       .throwIfNotFound()
   }

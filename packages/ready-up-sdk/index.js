@@ -43,6 +43,9 @@ const abstractInterface = {
   createNotification() {
     throw new NotImplementedError()
   },
+  batchCreateNotifications() {
+    throw new NotImplementedError()
+  },
   getNotification() {
     throw new NotImplementedError()
   }

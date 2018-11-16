@@ -76,10 +76,6 @@ exports.up = function(knex, Promise) {
         .references('users.id')
         .notNullable()
       table
-        .boolean('sent')
-        .defaultTo(false)
-        .notNullable()
-      table
         .timestamp('createdAt', 6)
         .defaultTo(knex.fn.now(6))
         .notNullable()

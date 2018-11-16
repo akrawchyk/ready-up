@@ -11,7 +11,6 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@phc/argon2": "^1.0.9",
-    "firebase-admin": "^6.1.0",
     "knex": "^0.15.2",
     "objection": "^1.4.0",
     "pg": "^7.6.0",

@@ -60,7 +60,7 @@ export default new Vuex.Store({
     async updateUser({ state, dispatch, commit }, { firebaseMessagingToken }) {
       try {
         return await readyUpSDK.updateUser({
-          id: state.currentSession.userId,
+          id: state.currentSession.user.id,
           firebaseMessagingToken
         })
       } catch (err) {
@@ -85,7 +85,7 @@ export default new Vuex.Store({
     },
     async queryLobbies({ commit }) {
       try {
-        const { body }= await readyUpSDK.queryLobbies()
+        const { body } = await readyUpSDK.queryLobbies()
         commit('setLobbies', body.lobbies)
       } catch (err) {
         throw err

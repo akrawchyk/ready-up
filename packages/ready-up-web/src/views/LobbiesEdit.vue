@@ -43,15 +43,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentLobby']),
-    ...mapState({
-      user: (state) => {
-        return {
-          id: state.currentSession.userId,
-          displayName: state.currentSession.displayName
-        }
-      }
-    }),
+    ...mapGetters(['currentSession', 'currentLobby']),
+    user() {
+      return this.currentSession.user
+    },
     lobbyParams() {
       return {
         createdByUserId: this.user.id
