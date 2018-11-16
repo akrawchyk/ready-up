@@ -52,27 +52,27 @@ scenarios:
           userDisplayName: '{{ displayName }}'
           userPassword: '{{ password }}'
         capture:
-          - json: '$.userDisplayName'
+          - json: '$.user.displayName'
             as: 'userDisplayName'
         expect:
           - statusCode: 201
           - contentType: 'json'
-          - hasProperty: 'userDisplayName'
+          - hasProperty: 'user.displayName'
           - equals:
             - '{{ userDisplayName }}'
             - '{{ displayName }}'
     - get:
         url: '/sessions'
         capture:
-          - json: '$.userDisplayName'
+          - json: '$.user.displayName'
             as: 'userDisplayName'
         match:
-          json: '$.userDisplayName'
+          json: '$.user.displayName'
           value: '{{ displayName }}'
         expect:
           - statusCode: 200
           - contentType: 'json'
-          - hasProperty: 'userDisplayName'
+          - hasProperty: 'user.displayName'
           - equals:
             - '{{ displayName }}'
             - '{{ userDisplayName }}'
