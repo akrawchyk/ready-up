@@ -1,5 +1,5 @@
 <template>
-  <div><router-view /></div>
+  <div id="lobbies"><router-view /></div>
 </template>
 
 <script>

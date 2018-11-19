@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     <h1>Welcome to Ready Up</h1>
     {{ currentSession }}
     <p v-if="currentSession">

@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div id="login">
     <h1>Login</h1>
     <ErrorList :errors="errors" />
     <form @submit.prevent="onSubmit()">
