@@ -18,9 +18,10 @@ blocks:
             - cache restore node-modules-$(checksum package-lock.json)
             - npm ci
             - cache store node-modules-$(checksum package-lock.json) node_modules
-            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - npx lerna bootstrap
-            - for dir in $(ls packages); do; (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
+            - for dir in $(ls packages); do (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
+            - cache store ready-up-web-dist-$SEMAPHORE_GIT_SHA packages/ready-up-web/dist
 
   - name: "Build and Test"
     task:
@@ -32,7 +33,7 @@ blocks:
         - name: "API Load Tests"
           commands:
             - cache restore node-modules-$(checksum package-lock.json)
-            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
@@ -43,8 +44,9 @@ blocks:
               value: "http://localhost:3000"
         - name: "Web E2E Tests"
           commands:
+            - cache restore ready-up-web-dist-$SEMAPHORE_GIT_SHA
             - cache restore node-modules-$(checksum package-lock.json)
-            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
