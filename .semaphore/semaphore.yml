@@ -13,7 +13,7 @@ blocks:
           - sem-service start postgres
           - sem-version node 10
       jobs:
-        - name: "Bootstrap"
+        - name: "API Load Tests"
           commands:
             - checkout
             - npm ci
@@ -21,6 +21,24 @@ blocks:
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
+            - npx pm2 show ready-up-api > /dev/null
+            - (cd packages/ready-up-api; npm run test)
+          env_vars:
+            - name: TEST_URL
+              value: "http://localhost:3000"
+        - name: "Web E2E Tests"
+          commands:
+            - checkout
+            - npm ci
+            - npx lerna bootstrap
+            - createdb -U postgres -h 0.0.0.0 ready-up
+            - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
+            - npx pm2 start ecosystem.config.js
+            - npx pm2 show ready-up-web > /dev/null
+            - (cd packages/ready-up-web; npm run test:e2e -- --url $TEST_URL)
+          env_vars:
+            - name: TEST_URL
+              value: "http://localhost:8000"
       env_vars:
         - name: READY_UP_MAX_SESSION_MS
           value: "600000"
@@ -36,27 +54,3 @@ blocks:
         - name: ready-up-secret
         - name: ready-up-firebase
         - name: ready-up-fcm
-
-    task:
-      jobs:
-        - name: "Healthcheck API"
-          commands:
-            - npx pm2 show ready-up-api > /dev/null
-        - name: "Healthcheck Web"
-          commands:
-            - npx pm2 show ready-up-web > /dev/null
-
-    task:
-      jobs:
-        - name: "API Load tests"
-          commands:
-            - (cd packages/ready-up-api; npm run test)
-          env_vars:
-            - name: TEST_URL
-              value: "http://localhost:3000"
-        - name: "Web E2E tests"
-          commands:
-            - (cd packages/ready-up-web; npm run test:e2e -- --url $TEST_URL)
-          env_vars:
-            - name: TEST_URL
-              value: "http://localhost:8000"
