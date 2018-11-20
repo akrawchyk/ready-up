@@ -1,16 +1,23 @@
+version: v1.0
+name: ready-up
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
 blocks:
-  - name: Bootstrap
+  - name: "Bootstrap"
     task:
       prologue:
         commands:
           - sem-service start postgres
       jobs:
-        - name: Setup
+        - name: "Setup"
           commands:
             - npm ci
             - npx lerna bootstrap
             - createdb -U postgres -h 0.0.0.0 ready-up
-            - cd packages/ready-up-pg-connector; npx knex migrate:latest
+            - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
       env_vars:
         - name: READY_UP_MAX_SESSION_MS
@@ -27,7 +34,8 @@ blocks:
           value: 3000
         - name: READY_UP_LISTEN_ADDRESS
           value: localhost
-  - name: Healthcheck
+
+  - name: "Healthcheck"
     task:
       jobs:
         - name: API
@@ -36,12 +44,20 @@ blocks:
         - name: Web
           commands:
             - npx pm2 show ready-up-web > /dev/null
-  - name: API Tests
+
+
+  - name: "Tests"
     task:
       jobs:
-        - name: Load tests
+        - name: "API Load tests"
           commands:
-            - cd packages/ready-up-api; npm run test
+            - (cd packages/ready-up-api; npm run test)
           env_vars:
             - name: TEST_URL
               value: http://localhost:3000
+        - name: "Web E2E tests"
+          commands:
+            - (cd packages/ready-up-web; npm run test:e2e -- --url $TEST_URL)
+          env_vars:
+            - name: TEST_URL
+              value: http://localhost:8000
