@@ -27,7 +27,7 @@ blocks:
         - name: READY_UP_SESSION_SECRET_KEY_PATH
           value: "/home/runner/tmp/ready-up-session-secret-key"
         - name: READY_UP_PG_CONNECTION_STRING
-          value: "postgresql://runner:semaphoredb@localhost/ready-up"
+          value: "postgresql://postgres@localhost/ready-up"
         - name: READY_UP_LISTEN_PORT
           value: "3000"
         - name: READY_UP_LISTEN_ADDRESS
