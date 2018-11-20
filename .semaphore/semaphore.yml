@@ -22,7 +22,7 @@ blocks:
             - for dir in $(ls packages); do (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
             - cache store ready-up-web-dist-$SEMAPHORE_GIT_SHA packages/ready-up-web/dist
 
-  - name: "Build and Test"
+  - name: "Tests"
     task:
       prologue:
         commands:
