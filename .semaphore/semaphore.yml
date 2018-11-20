@@ -21,19 +21,19 @@ blocks:
             - npx pm2 start ecosystem.config.js
       env_vars:
         - name: READY_UP_MAX_SESSION_MS
-          value: 600000
+          value: "600000"
         - name: READY_UP_SESSION_SECRET_KEY_PATH
-          value:: /home/runner/tmp/ready-up-session-secret-key
+          value:: "/home/runner/tmp/ready-up-session-secret-key"
         - name: READY_UP_PG_CONNECTION_STRING
-          value: postgresql://runner:semaphoredb@localhost/ready-up
+          value: "postgresql://runner:semaphoredb@localhost/ready-up"
         - name: READY_UP_FIREBASE_SERVICE_ACCOUNT_KEY_PATH
-          value: /home/runner/tmp/ready-up-test-firebase-adminsdk-f213u-ec3af1a8f2.json
+          value: "/home/runner/tmp/ready-up-test-firebase-adminsdk-f213u-ec3af1a8f2.json"
         - name: READY_UP_FIREBASE_MESSAGING_SENDER_ID
-          value: 453344333329
+          value: "453344333329"
         - name: READY_UP_LISTEN_PORT
-          value: 3000
+          value: "3000"
         - name: READY_UP_LISTEN_ADDRESS
-          value: localhost
+          value: "localhost"
 
   - name: "Healthcheck"
     task:
@@ -54,10 +54,10 @@ blocks:
             - (cd packages/ready-up-api; npm run test)
           env_vars:
             - name: TEST_URL
-              value: http://localhost:3000
+              value: "http://localhost:3000"
         - name: "Web E2E tests"
           commands:
             - (cd packages/ready-up-web; npm run test:e2e -- --url $TEST_URL)
           env_vars:
             - name: TEST_URL
-              value: http://localhost:8000
+              value: "http://localhost:8000"
