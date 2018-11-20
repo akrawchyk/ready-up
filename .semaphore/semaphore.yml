@@ -15,6 +15,7 @@ blocks:
       jobs:
         - name: "Setup"
           commands:
+            - checkout
             - npm ci
             - npx lerna bootstrap
             - createdb -U postgres -h 0.0.0.0 ready-up
