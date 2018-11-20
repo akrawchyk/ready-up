@@ -11,6 +11,7 @@ blocks:
       prologue:
         commands:
           - sem-service start postgres
+          - sem-version node 10
       jobs:
         - name: "Setup"
           commands:
@@ -31,6 +32,7 @@ blocks:
         - name: READY_UP_LISTEN_ADDRESS
           value: "localhost"
       secrets:
+        - name: ready-up-secret
         - name: ready-up-firebase
         - name: ready-up-fcm
 
