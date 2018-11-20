@@ -6,14 +6,14 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Bootstrap"
+  - name: "Build and Test"
     task:
       prologue:
         commands:
           - sem-service start postgres
           - sem-version node 10
       jobs:
-        - name: "Setup"
+        - name: "Bootstrap"
           commands:
             - checkout
             - npm ci
@@ -37,18 +37,15 @@ blocks:
         - name: ready-up-firebase
         - name: ready-up-fcm
 
-  - name: "Healthcheck"
     task:
       jobs:
-        - name: API
+        - name: "Healthcheck API"
           commands:
             - npx pm2 show ready-up-api > /dev/null
-        - name: Web
+        - name: "Healthcheck Web"
           commands:
             - npx pm2 show ready-up-web > /dev/null
 
-
-  - name: "Tests"
     task:
       jobs:
         - name: "API Load tests"
