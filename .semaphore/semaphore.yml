@@ -15,9 +15,7 @@ blocks:
         - name: ""
           commands:
             - checkout
-            - cache restore node-modules-$(checksum package-lock.json)
             - npm ci
-            - cache store node-modules-$(checksum package-lock.json) node_modules
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - npx lerna bootstrap
             - for dir in $(ls packages); do (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
@@ -32,7 +30,7 @@ blocks:
       jobs:
         - name: "API Load Tests"
           commands:
-            - cache restore node-modules-$(checksum package-lock.json)
+            - checkout
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
@@ -44,8 +42,8 @@ blocks:
               value: "http://localhost:3000"
         - name: "Web E2E Tests"
           commands:
+            - checkout
             - cache restore ready-up-web-dist-$SEMAPHORE_GIT_SHA
-            - cache restore node-modules-$(checksum package-lock.json)
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
