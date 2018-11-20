@@ -6,6 +6,22 @@ agent:
     os_image: ubuntu1804
 
 blocks:
+  - name: "Install dependencies"
+    task:
+      prologue:
+        commands:
+          - sem-version node 10
+      jobs:
+        - name: ""
+          commands:
+            - checkout
+            - cache restore node-modules-$(checksum package-lock.json)
+            - npm ci
+            - cache store node-modules-$(checksum package-lock.json) node_modules
+            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - npx lerna bootstrap
+            - for dir in $(ls packages); do; (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
+
   - name: "Build and Test"
     task:
       prologue:
@@ -15,9 +31,8 @@ blocks:
       jobs:
         - name: "API Load Tests"
           commands:
-            - checkout
-            - npm ci
-            - npx lerna bootstrap
+            - cache restore node-modules-$(checksum package-lock.json)
+            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
@@ -28,9 +43,8 @@ blocks:
               value: "http://localhost:3000"
         - name: "Web E2E Tests"
           commands:
-            - checkout
-            - npm ci
-            - npx lerna bootstrap
+            - cache restore node-modules-$(checksum package-lock.json)
+            - for dir in $(ls packages); do; (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
             - npx pm2 start ecosystem.config.js
