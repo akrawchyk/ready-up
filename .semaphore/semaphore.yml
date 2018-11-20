@@ -12,10 +12,11 @@ blocks:
         commands:
           - sem-version node 10
       jobs:
-        - name: ""
+        - name: "lerna bootstrap and cache"
           commands:
             - checkout
             - npm ci
+            - cache store node-modules-$(checksum package-lock.json) node_modules
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
             - npx lerna bootstrap
             - for dir in $(ls packages); do (cd packages/$dir; cache store node-modules-$(checksum package-lock.json) node_modules); done;
@@ -31,28 +32,37 @@ blocks:
         - name: "API Load Tests"
           commands:
             - checkout
+            - cache restore node-modules-$(checksum package-lock.json)
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - cache restore ready-up-web-dist-$SEMAPHORE_GIT_SHA
+
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
+
             - npx pm2 start ecosystem.config.js
+
             - npx pm2 show ready-up-api > /dev/null
             - (cd packages/ready-up-api; npm run test)
           env_vars:
             - name: TEST_URL
-              value: "http://localhost:3000"
+              value: "http://0.0.0.0:3000"
         - name: "Web E2E Tests"
           commands:
             - checkout
-            - cache restore ready-up-web-dist-$SEMAPHORE_GIT_SHA
+            - cache restore node-modules-$(checksum package-lock.json)
             - for dir in $(ls packages); do (cd packages/$dir; cache restore node-modules-$(checksum package-lock.json)); done;
+            - cache restore ready-up-web-dist-$SEMAPHORE_GIT_SHA
+
             - createdb -U postgres -h 0.0.0.0 ready-up
             - (cd packages/ready-up-pg-connector; npx knex migrate:latest)
+
             - npx pm2 start ecosystem.config.js
+
             - npx pm2 show ready-up-web > /dev/null
             - (cd packages/ready-up-web; npm run test:e2e -- --url $TEST_URL)
           env_vars:
             - name: TEST_URL
-              value: "http://localhost:8000"
+              value: "http://0.0.0.0:8000"
       env_vars:
         - name: READY_UP_MAX_SESSION_MS
           value: "600000"
