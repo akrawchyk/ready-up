@@ -23,17 +23,16 @@ blocks:
         - name: READY_UP_MAX_SESSION_MS
           value: "600000"
         - name: READY_UP_SESSION_SECRET_KEY_PATH
-          value:: "/home/runner/tmp/ready-up-session-secret-key"
+          value: "/home/runner/tmp/ready-up-session-secret-key"
         - name: READY_UP_PG_CONNECTION_STRING
           value: "postgresql://runner:semaphoredb@localhost/ready-up"
-        - name: READY_UP_FIREBASE_SERVICE_ACCOUNT_KEY_PATH
-          value: "/home/runner/tmp/ready-up-test-firebase-adminsdk-f213u-ec3af1a8f2.json"
-        - name: READY_UP_FIREBASE_MESSAGING_SENDER_ID
-          value: "453344333329"
         - name: READY_UP_LISTEN_PORT
           value: "3000"
         - name: READY_UP_LISTEN_ADDRESS
           value: "localhost"
+      secrets:
+        - name: ready-up-firebase
+        - name: ready-up-fcm
 
   - name: "Healthcheck"
     task:
