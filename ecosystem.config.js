@@ -22,8 +22,8 @@ module.exports = {
 
       env_development: {
         DEBUG: 'knex:query',
-        READY_UP_SSL_CERT_PATH: '/home/andrew/tmp/ssl/ready-up.test.crt',
-        READY_UP_SSL_KEY_PATH: '/home/andrew/tmp/ssl/ready-up.test.key',
+        READY_UP_SSL_CERT_PATH: '/Users/akrawchyk/Developer/ready-up/tmp/server.crt',
+        READY_UP_SSL_KEY_PATH: '/Users/akrawchyk/Developer/ready-up/tmp/server.key',
         READY_UP_ALLOWED_ORIGINS: ['https://ready-up.test:8080', 'https://ready-up.test:8000'].join(
           ','
         ),
